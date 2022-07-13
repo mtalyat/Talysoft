@@ -46,7 +46,6 @@
     <Compile Include="Generator.cs" />
     <Compile Include="IO\Compression.cs" />
     <Compile Include="BetterConsole\Console.cs" />
-    <Compile Include="Coordinate2D.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Formatting.cs" />
     <Compile Include="Math\AdvMath.cs" />
