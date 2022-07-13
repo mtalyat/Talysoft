@@ -2,7 +2,7 @@
 using System.IO;
 using System.Text;
 using System.Linq;
-using static Talysoft.Formatting;
+using static Talysoft.Constants;
 
 namespace Talysoft.BetterConsole
 {

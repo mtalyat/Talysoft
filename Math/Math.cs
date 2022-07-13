@@ -6,8 +6,25 @@ using System.Threading.Tasks;
 
 namespace Talysoft.Mathematics
 {
+    /// <summary>
+    /// Provides addition Math calculations.
+    /// </summary>
     public static class Math
     {
+        #region Comparisons
+
+        public static bool All(bool left, bool right)
+        {
+            return left && right;
+        }
+
+        public static bool Any(bool left, bool right)
+        {
+            return left || right;
+        }
+
+        #endregion
+
         #region Trigonometry
 
         /// <summary>

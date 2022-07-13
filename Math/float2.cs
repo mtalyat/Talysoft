@@ -117,7 +117,7 @@ namespace Talysoft.Mathematics
 
         public override string ToString()
         {
-            return $"float2{Formatting.OPEN}{X}, {Y}{Formatting.CLOSE}";
+            return $"float2{Constants.OPEN}{X}, {Y}{Constants.CLOSE}";
         }
     }
 }

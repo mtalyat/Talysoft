@@ -7,10 +7,17 @@ using System.Threading.Tasks;
 namespace Talysoft
 {
     /// <summary>
-    /// Provides constants used for formatting purposes.
+    /// Provides constants used for formatting purposes, data calculation, and more.
     /// </summary>
-    internal static class Formatting
+    internal class Constants
     {
+        public const int BITS = 8;
+        public const int BYTE_SIZE = sizeof(byte);
+        public const int BYTE_SIZE_BITS = BYTE_SIZE * BITS;
+        public const int SHORT_SIZE = sizeof(short);
+        public const int INT_SIZE = sizeof(int);
+        public const int LONG_SIZE = sizeof(long);
+
         public const char IN_CHAR = '>';
         public const char OUT_CHAR = '<';
 

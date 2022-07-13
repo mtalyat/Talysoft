@@ -43,11 +43,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Constants.cs" />
+    <Compile Include="DataTypes\PackedInt.cs" />
     <Compile Include="Generator.cs" />
     <Compile Include="IO\Compression.cs" />
     <Compile Include="BetterConsole\Console.cs" />
     <Compile Include="Extensions.cs" />
-    <Compile Include="Formatting.cs" />
     <Compile Include="Math\Math.cs" />
     <Compile Include="IO\ISaveable.cs" />
     <Compile Include="Math\float2.cs" />
