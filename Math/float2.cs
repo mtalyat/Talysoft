@@ -8,6 +8,9 @@ using Talysoft.IO;
 
 namespace Talysoft.Math
 {
+    /// <summary>
+    /// A pair of floats.
+    /// </summary>
     public struct float2 : ISaveable, IMathematical<float2>
     {
         public float X { get; set; }
@@ -67,6 +70,8 @@ namespace Talysoft.Math
 
         #endregion
 
+        #region Serialization
+
         public void Serialize(BinaryWriter writer, uint version)
         {
             writer.Write(X);
@@ -78,6 +83,8 @@ namespace Talysoft.Math
             X = reader.ReadSingle();
             Y = reader.ReadSingle();
         }
+
+        #endregion
 
         public bool Equals(float2 other)
         {

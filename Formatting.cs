@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace Talysoft
 {
-    static class Formatting
+    /// <summary>
+    /// Provides constants used for formatting purposes.
+    /// </summary>
+    internal static class Formatting
     {
         public const char IN_CHAR = '>';
         public const char OUT_CHAR = '<';

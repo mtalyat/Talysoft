@@ -6,9 +6,13 @@ using System.Threading.Tasks;
 
 namespace Talysoft.Math
 {
+    /// <summary>
+    /// Provides basic Mathematical functionality.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public interface IMathematical<T> : IComparable<T>, IEquatable<T>
     {
-        float Magnitude();
-        float MagnitudeSquared();
+        //T Magnitude();
+        //T MagnitudeSquared();
     }
 }

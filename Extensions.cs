@@ -7,8 +7,18 @@ using static Talysoft.Formatting;
 
 namespace Talysoft
 {
+    /// <summary>
+    /// Extensions for various types.
+    /// </summary>
     public static class Extensions
     {
+        /// <summary>
+        /// Converts this Array to a string.
+        /// </summary>
+        /// <typeparam name="T">The Type that this Array holds.</typeparam>
+        /// <param name="arr">The Array with the data to be processed.</param>
+        /// <param name="cutoff"></param>
+        /// <returns></returns>
         public static string ArrayToString<T>(this T[] arr, int cutoff = -1)
         {
             StringBuilder sb = new StringBuilder();
@@ -53,6 +63,13 @@ namespace Talysoft
             return sb.ToString();
         }
 
+        /// <summary>
+        /// Loosely "wraps" the given text, using the given width.
+        /// Words can go past the given width, if they are long.
+        /// </summary>
+        /// <param name="text"></param>
+        /// <param name="width"></param>
+        /// <returns></returns>
         public static string LooseTextWrap(this string text, int width)
         {
             StringBuilder sb = new StringBuilder();
@@ -76,6 +93,13 @@ namespace Talysoft
             return sb.ToString();
         }
 
+        /// <summary>
+        /// Hard "wraps" the given text, using the given width.
+        /// Words will not go past the given width, even if they are long.
+        /// </summary>
+        /// <param name="text"></param>
+        /// <param name="width"></param>
+        /// <returns></returns>
         public static string HardTextWrap(this string text, int width)
         {
             StringBuilder sb = new StringBuilder();
