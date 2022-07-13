@@ -48,7 +48,7 @@
     <Compile Include="BetterConsole\Console.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Formatting.cs" />
-    <Compile Include="Math\AdvMath.cs" />
+    <Compile Include="Math\Math.cs" />
     <Compile Include="IO\ISaveable.cs" />
     <Compile Include="Math\float2.cs" />
     <Compile Include="Math\IMathematical.cs" />

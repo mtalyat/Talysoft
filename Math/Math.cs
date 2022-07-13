@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Talysoft.Math
+namespace Talysoft.Mathematics
 {
-    public static class AdvMath
+    public static class Math
     {
         #region Trigonometry
 

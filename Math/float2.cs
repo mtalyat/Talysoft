@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Talysoft.IO;
 
-namespace Talysoft.Math
+namespace Talysoft.Mathematics
 {
     /// <summary>
     /// A pair of floats.
@@ -86,6 +86,8 @@ namespace Talysoft.Math
 
         #endregion
 
+        #region Comparison
+
         public bool Equals(float2 other)
         {
             return other.X == X && other.Y == Y;
@@ -99,6 +101,23 @@ namespace Talysoft.Math
             if (m > o) return 1;
             else if (m < o) return -1;
             else return 0;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is float2 f && Equals(f);
+        }
+
+        public override int GetHashCode()
+        {
+            return X.GetHashCode() ^ Y.GetHashCode();
+        }
+
+        #endregion
+
+        public override string ToString()
+        {
+            return $"float2{Formatting.OPEN}{X}, {Y}{Formatting.CLOSE}";
         }
     }
 }

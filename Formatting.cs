@@ -16,6 +16,10 @@ namespace Talysoft
 
         public const char ARR_OPEN = '[';
         public const char ARR_CLOSE = ']';
+
+        public const char OPEN = '(';
+        public const char CLOSE = ')';
+
         public const char SEPARATOR = ',';
     }
 }

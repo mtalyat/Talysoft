@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Talysoft.Math
+namespace Talysoft.Mathematics
 {
     /// <summary>
     /// Provides basic Mathematical functionality.
