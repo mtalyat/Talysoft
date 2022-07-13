@@ -52,10 +52,7 @@ namespace Talysoft
 
             return sb.ToString();
         }
-    }
 
-    public static class StringExtensions
-    {
         public static string LooseTextWrap(this string text, int width)
         {
             StringBuilder sb = new StringBuilder();
@@ -87,11 +84,11 @@ namespace Talysoft
 
             int lineLength = 0;
 
-            foreach(string word in words)
+            foreach (string word in words)
             {
                 int wordLength = word.Length;
 
-                if(lineLength + wordLength > width)
+                if (lineLength + wordLength > width)
                 {
                     //new line time
                     sb.Append('\n');
@@ -99,16 +96,18 @@ namespace Talysoft
 
                     sb.Append(' ');
                     lineLength = wordLength + 1;
-                } else
+                }
+                else
                 {
                     //add to this line
                     sb.Append(word);
-                    
+
                     //if with the space, it goes over, don't add the space
                     if (lineLength + wordLength + 1 > width)
                     {
                         lineLength += wordLength;
-                    } else
+                    }
+                    else
                     {
                         sb.Append(' ');
                         lineLength += wordLength + 1;
