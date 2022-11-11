@@ -31,6 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="NHunspell, Version=1.2.5554.16953, Culture=neutral, PublicKeyToken=1ac793ea843b4366, processorArchitecture=MSIL">
+      <HintPath>..\packages\NHunspell.1.2.5554.16953\lib\net\NHunspell.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -44,11 +47,24 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Constants.cs" />
+    <Compile Include="Database.cs" />
     <Compile Include="DataTypes\PackedInt.cs" />
+    <Compile Include="Debugging\Logger.cs" />
+    <Compile Include="Drawing\Graphs\BarGraph.cs" />
+    <Compile Include="Drawing\Graphs\Graph.cs" />
+    <Compile Include="Drawing\Graphs\GraphData.cs" />
+    <Compile Include="Drawing\Graphs\RectangularGraph.cs" />
     <Compile Include="Generator.cs" />
     <Compile Include="IO\Compression.cs" />
     <Compile Include="BetterConsole\Console.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="IO\Cryptography\CaesarCipher.cs" />
+    <Compile Include="IO\Cryptography\Cryptography.cs" />
+    <Compile Include="IO\Cryptography\Cipher.cs" />
+    <Compile Include="IO\CSV.cs" />
+    <Compile Include="IO\CSVAttribute.cs" />
+    <Compile Include="IO\Save.cs" />
+    <Compile Include="Mathematics\decimal2.cs" />
     <Compile Include="Mathematics\int2.cs" />
     <Compile Include="Mathematics\Math.cs" />
     <Compile Include="IO\ISaveable.cs" />
@@ -56,11 +72,19 @@
     <Compile Include="Mathematics\IMathematical.cs" />
     <Compile Include="Mathematics\Sort.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Rectangle2D.cs" />
-    <Compile Include="Vector2D.cs" />
+    <Compile Include="Mathematics\Statistics.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Hunspellx64.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Hunspellx86.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <Content Include="TODO.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
