@@ -7,7 +7,7 @@ using System.IO;
 
 namespace Talysoft.IO
 {
-    public static class Save
+    public static class SaveLoad
     {
         public static uint Version { get; set; } = 0;
 
