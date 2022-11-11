@@ -27,6 +27,17 @@ namespace Talysoft.DataTypes
             set => _data = value;
         }
 
+        /// <summary>
+        /// Gets or sets the byte at the corresponding index.
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public byte this[int index]
+        {
+            get => (byte)GetByte(index);
+            set => SetByte(index, value);
+        }
+
         #region Constructors
 
         /// <summary>
@@ -192,5 +203,4 @@ namespace Talysoft.DataTypes
             return Convert.ToString(_data, 2);//convert to base 2
         }
     }
-
 }
