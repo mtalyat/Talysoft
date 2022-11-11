@@ -24,6 +24,9 @@ namespace Talysoft
         public const char ARR_OPEN = '[';
         public const char ARR_CLOSE = ']';
 
+        public const char OBJ_OPEN = '{';
+        public const char OBJ_CLOSE = '}';
+
         public const char OPEN = '(';
         public const char CLOSE = ')';
 

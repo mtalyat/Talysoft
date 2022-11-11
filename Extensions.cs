@@ -17,7 +17,7 @@ namespace Talysoft
         /// </summary>
         /// <typeparam name="T">The Type that this Array holds.</typeparam>
         /// <param name="arr">The Array with the data to be processed.</param>
-        /// <param name="cutoff"></param>
+        /// <param name="cutoff">The max amount of elements to print. Use -1 for no cutoff.</param>
         /// <returns></returns>
         public static string ArrayToString<T>(this T[] arr, int cutoff = -1)
         {
@@ -59,6 +59,29 @@ namespace Talysoft
             }
 
             sb.Append(ARR_CLOSE);
+
+            return sb.ToString();
+        }
+
+        /// <summary>
+        /// Converts this Jagged array to a string.
+        /// </summary>
+        /// <typeparam name="T">The Type that this Array holds.</typeparam>
+        /// <param name="arr">The Array with the data to be processed.</param>
+        /// <param name="multiLine">Should this string contain new lines?</param>
+        /// <param name="cutoff">The max amount of elements to print. Use -1 for no cutoff.</param>
+        /// <returns></returns>
+        public static string JaggedArrayToString<T>(this T[][] arr, bool multiLine = true, int cutoff = -1)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            sb.Append(OBJ_OPEN);
+            sb.Append(multiLine ? '\n' : ' ');
+
+            sb.Append(string.Join(multiLine ? ",\n" : ", ", arr.Select(a => a.ArrayToString(cutoff))));
+
+            sb.Append(multiLine ? '\n' : ' ');
+            sb.Append(OBJ_CLOSE);
 
             return sb.ToString();
         }
