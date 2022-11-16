@@ -3,6 +3,9 @@ using System.IO;
 using System.Text;
 using System.Linq;
 using static Talysoft.Constants;
+using System.Collections.Generic;
+using Talysoft.Debugging;
+using System.Windows.Forms;
 
 namespace Talysoft.BetterConsole
 {
@@ -88,6 +91,19 @@ namespace Talysoft.BetterConsole
         }
 
         /// <summary>
+        /// Prints an array of strings to the screen.
+        /// </summary>
+        /// <param name="strs"></param>
+        /// <param name="indentation"></param>
+        public static void Write(string[] strs, int indentation = 0)
+        {
+            foreach(string str in strs)
+            {
+                Write(str, indentation);
+            }
+        }
+
+        /// <summary>
         /// Prints an empty line to the screen.
         /// </summary>
         public static void WriteLine() => WriteLine("");
@@ -96,15 +112,28 @@ namespace Talysoft.BetterConsole
         /// Prints an object as a string, followed by a new line to the screen.
         /// </summary>
         /// <param name="o">The object to be printed.</param>
-        public static void WriteLine(object o) => WriteLine(o.ToString());
+        public static void WriteLine(object o, int indentation = 0) => WriteLine(o.ToString(), indentation);
 
         /// <summary>
         /// Prints a string followed by a new line to the screen.
         /// </summary>
         /// <param name="str">The string to be printed.</param>
-        public static void WriteLine(string str)
+        public static void WriteLine(string str, int indentation = 0)
         {
-            Write(str + '\n');
+            Write(str + '\n', indentation);
+        }
+
+        /// <summary>
+        /// Prints an array of strings, each followed by a new line, to the screen.
+        /// </summary>
+        /// <param name="strs"></param>
+        /// <param name="indentation"></param>
+        public static void WriteLine(string[] strs, int indentation = 0)
+        {
+            foreach(string str in strs)
+            {
+                WriteLine(str, indentation);
+            }
         }
 
         /// <summary>
@@ -587,13 +616,13 @@ namespace Talysoft.BetterConsole
         /// <param name="options">The options the user can select from.</param>
         /// <param name="startIndex">The index at which the user's selection starts on.</param>
         /// <returns>The selected option.</returns>
-        public static T EnterChoice<T>(T[] options, string prompt = "", int startIndex = 0)
+        public static T EnterChoice<T>(IEnumerable<T> options, string prompt = "", int startIndex = 0, int displayCount = 10)
         {
-            int index = EnterChoiceIndex(options, prompt, startIndex);
+            int index = EnterChoiceIndex(options, prompt, startIndex, displayCount);
 
             if (index >= 0)
             {
-                return options[index];
+                return options.ElementAt(index);
             }
             else
             {
@@ -610,13 +639,13 @@ namespace Talysoft.BetterConsole
         /// <param name="options">The options the user can select from.</param>
         /// <param name="startIndex">The index at which the user's selection starts on.</param>
         /// <returns>The index of the selected option.</returns>
-        public static int EnterChoiceIndex<T>(T[] options, string prompt = "", int startIndex = 0)
+        public static int EnterChoiceIndex<T>(IEnumerable<T> options, string prompt = "", int startIndex = 0, int displayCount = 10)
         {
             //cannot pick from an empty list
-            if (options.Length == 0) return -1;
+            if (!options.Any()) return -1;
 
             int selectedIndex = startIndex;
-            int optionCount = options.Length;
+            int optionCount = options.Count();
 
             ConsoleKey key;
 
@@ -630,24 +659,22 @@ namespace Talysoft.BetterConsole
                 WritePrompt(prompt);
                 left = System.Console.CursorLeft;
                 WriteLine();
+                WriteLine();
             }
-
-            WriteLine();
 
             int offset = System.Console.CursorTop;
 
             //first, print all of the options to the screen
-            for (int i = 0; i < options.Length; i++)
-            {
-                WriteLine("  " + options[i].ToString());
-            }
+            PrintOptions(options, startIndex, displayCount);
 
             WriteLine();
-            Write("Use the arrow keys to select an option.\n", 1);
-            Write("Press Enter when you are done, or Escape to cancel.", 1);
+            WriteLine("Use the arrow keys to select an option.", 1);
+            WriteLine("Press Enter when you are done, or Escape to cancel.", 1);
 
             //print the initial >
             WriteAt(IN_CHAR, 0, selectedIndex + offset);
+
+            int scroll = Mathematics.Math.Clamp(selectedIndex - displayCount / 2, 0, optionCount - 1 - displayCount);
 
             do
             {
@@ -658,8 +685,9 @@ namespace Talysoft.BetterConsole
                     key == ConsoleKey.PageUp || key == ConsoleKey.PageDown)
                 {
                     //clear current position
-                    WriteAt(" ", 0, selectedIndex + offset);
+                    WriteAt(" ", 0, selectedIndex - scroll + offset);
 
+                    // determine what to select
                     switch (key)
                     {
                         case ConsoleKey.UpArrow:
@@ -672,41 +700,64 @@ namespace Talysoft.BetterConsole
                             if (selectedIndex == 0)
                                 selectedIndex = optionCount - 1;
                             else
-                                selectedIndex = System.Math.Max(0, selectedIndex - 10);
+                                selectedIndex = Math.Max(0, selectedIndex - 10);
                             break;
                         case ConsoleKey.PageDown:
                             if (selectedIndex == optionCount - 1)
                                 selectedIndex = 0;
                             else
-                                selectedIndex = System.Math.Min(optionCount - 1, selectedIndex + 10);
+                                selectedIndex = Math.Min(optionCount - 1, selectedIndex + 10);
                             break;
                     }
+                    
+                    // clamp scroll
+                    scroll = Mathematics.Math.Clamp(selectedIndex - displayCount / 2, 0, optionCount - 1 - (displayCount - 1));
 
-                    //write new position
-                    //clear current position
-                    WriteAt(IN_CHAR, 0, selectedIndex + offset);
+                    // print new list based on scroll
+                    SetCursorPosition(0, offset);
+                    PrintOptions(options, scroll, displayCount);
+
+                    //write new position, offset by the scroll
+                    WriteAt(IN_CHAR, 0, selectedIndex - scroll + offset);
                 }
                 else if (key == ConsoleKey.Escape)
                 {
+                    ClearLinesNoCursor(top + 1, offset + displayCount + 3);
                     return -1;
                 }
-
             } while (key != ConsoleKey.Enter);
 
             //clear the list, but not the whole screen
             if (left >= 0)
             {
-                WriteAt(options[selectedIndex], left, top);
-                ClearLinesNoCursor(top + 1, offset + optionCount + 2);
+                WriteAt(options.ElementAt(selectedIndex), left, top);
+                ClearLinesNoCursor(top + 1, offset + displayCount + 3);
             }
             else
             {
-                ClearLinesNoCursor(top, offset + optionCount + 2);
+                ClearLinesNoCursor(top, offset + displayCount + 3);
             }
 
             ShowCursor();
 
             return selectedIndex;
+        }
+
+        /// <summary>
+        /// Prints the list of options to the screen, within the given range.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="options"></param>
+        /// <param name="start"></param>
+        /// <param name="count"></param>
+        private static void PrintOptions<T>(IEnumerable<T> options, int start, int count)
+        {
+            int optionsCount = options.Count();
+
+            for (int i = start; i < start + count && i < optionsCount; i++)
+            {
+                WriteLine("  " + options.ElementAt(i).ToString().PadRight(System.Console.BufferWidth - 2));
+            }
         }
 
         /// <summary>
@@ -821,6 +872,144 @@ namespace Talysoft.BetterConsole
         /// <param name="prompt">The prompt to be used.</param>
         /// <returns>The value the user selected.</returns>
         public static double EnterNumber(string prompt = "") => EnterNumber(0, 1, prompt);
+
+        /// <summary>
+        /// Prompts the user to enter a file path, using an in-console file viewer.
+        /// </summary>
+        /// <param name="prompt">The prompt to display to the user.</param>
+        /// <param name="path">The directory that the user will select a file or directory from.</param>
+        /// <param name="extension">The extension to filter the search by. Leave null to not filter at all.</param>
+        /// <returns></returns>
+        public static string EnterPath(string prompt = null, string path = @"C:\", string extension = null)
+        {
+            int top = System.Console.CursorTop;
+
+            int left = -1;
+
+            // print prompt
+            if (!string.IsNullOrWhiteSpace(prompt))
+            {
+                // print prompt
+                WritePrompt(prompt);
+                Write(path);
+                left = Math.Max(left, System.Console.CursorLeft);
+                WriteLine();
+            }
+
+            // add '.' to extension if needed
+            if (extension != null && !extension.StartsWith("."))
+            {
+                extension = $".{extension}";
+            }
+
+            // get all files and directories within the given directory
+
+            string[] directories = Directory.GetDirectories(path);
+
+            string[] files = Directory.GetFiles(path);
+
+            List<string> options = new List<string>(1 + directories.Length + files.Length);
+            List<string> optionPaths = new List<string>(options.Capacity);
+
+            // display "back" to go to the previous directory
+            options.Add("Back");
+
+            // display all the directories to select from, preceded by a '/'
+            foreach(string directory in directories)
+            {
+                options.Add($"{Path.DirectorySeparatorChar}{Path.GetFileName(directory)}");
+                optionPaths.Add(directory);
+            }
+
+            // display all the files to select from that match the extension
+            foreach(string file in files)
+            {
+                if (string.IsNullOrEmpty(extension) || (extension.Length > 0 && Path.HasExtension(extension)))
+                {
+                    options.Add(Path.GetFileName(file));
+                    optionPaths.Add(file);
+                }
+            }
+
+            // select from the files
+            int selected = EnterChoiceIndex(options.ToArray());
+
+            // clear top line which had the prompt/path/result
+            ClearLine(top + 1);
+
+            // set cursor back to top
+            SetCursorPosition(0, top + 1);
+
+            /*
+             * Conditions:
+             * 
+             * -1                                           Cancel
+             * 0                                            Go back a directory
+             * 1 <= directories.Length                      Select a directory
+             * directories.Length + 1 < files.Length        Select a file
+             */
+
+            if(selected <= -1)
+            {
+                if(left >= 0)
+                {
+                    // just show prompt with no output
+                    ClearLine(top);
+                    WritePrompt(prompt);
+                    WriteLine();
+                }
+                else
+                {
+                    SetCursorPosition(0, top);
+                }
+                return string.Empty;
+            } else if (selected == 0)
+            {
+                if (left >= 0)
+                {
+                    ClearLine(top);
+                } else
+                {
+                    SetCursorPosition(0, top);
+                }
+                return EnterPath(prompt, Directory.GetParent(path.TrimEnd(Path.DirectorySeparatorChar)).FullName, extension);
+            } else
+            {
+                // if option starts with a directory separator char, then load it
+                // otherwise return the selected file
+                if (options[selected].StartsWith(Path.DirectorySeparatorChar.ToString()))
+                {
+                    if (left >= 0)
+                    {
+                        ClearLine(top);
+                    }
+                    else
+                    {
+                        SetCursorPosition(0, top);
+                    }
+                    return EnterPath(prompt, optionPaths[selected - 1], extension);
+                } else
+                {
+                    // normal file
+                    string finalPath = optionPaths[selected - 1];
+
+                    // print result if a prompt
+                    if(left >= 0)
+                    {
+                        ClearLine(top);
+                        WritePrompt(prompt);
+                        Write(finalPath);
+                        WriteLine();
+                    }
+                    else
+                    {
+                        SetCursorPosition(0, top);
+                    }
+
+                    return finalPath;
+                }
+            }
+        }
 
         /// <summary>
         /// Prompts the user to enter a T on the same line.

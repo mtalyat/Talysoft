@@ -47,13 +47,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Constants.cs" />
-    <Compile Include="Database.cs" />
     <Compile Include="DataTypes\PackedInt.cs" />
     <Compile Include="Debugging\Logger.cs" />
-    <Compile Include="Drawing\Graphs\BarGraph.cs" />
-    <Compile Include="Drawing\Graphs\Graph.cs" />
-    <Compile Include="Drawing\Graphs\GraphData.cs" />
-    <Compile Include="Drawing\Graphs\RectangularGraph.cs" />
     <Compile Include="Generator.cs" />
     <Compile Include="IO\Compression.cs" />
     <Compile Include="BetterConsole\Console.cs" />
@@ -63,7 +58,7 @@
     <Compile Include="IO\Cryptography\Cipher.cs" />
     <Compile Include="IO\CSV.cs" />
     <Compile Include="IO\CSVAttribute.cs" />
-    <Compile Include="IO\Save.cs" />
+    <Compile Include="IO\SaveLoad.cs" />
     <Compile Include="Mathematics\decimal2.cs" />
     <Compile Include="Mathematics\int2.cs" />
     <Compile Include="Mathematics\Math.cs" />
@@ -75,12 +70,6 @@
     <Compile Include="Mathematics\Statistics.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Hunspellx64.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Hunspellx86.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <Content Include="TODO.txt" />
   </ItemGroup>
   <ItemGroup>
