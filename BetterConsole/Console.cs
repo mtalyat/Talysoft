@@ -66,7 +66,7 @@ namespace Talysoft.BetterConsole
         /// <param name="top">The distance from the top of the buffer.</param>
         public static void SetCursorPosition(int left, int top)
         {
-            System.Console.SetCursorPosition(left, top);
+            System.Console.SetCursorPosition(Mathematics.Math.Clamp(left, 0, System.Console.BufferWidth - 1), Mathematics.Math.Clamp(top, 0, System.Console.BufferHeight - 1));
         }
 
         #endregion
@@ -162,7 +162,7 @@ namespace Talysoft.BetterConsole
         /// <param name="top">The distance from the top of the buffer.</param>
         public static void WriteAt(string str, int left, int top)
         {
-            System.Console.SetCursorPosition(left, top);
+            SetCursorPosition(left, top);
             System.Console.Write(str);
         }
 
