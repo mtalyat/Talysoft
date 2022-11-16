@@ -9,20 +9,32 @@ namespace Talysoft.BetterConsole
 {
     public static class Console
     {
+        /// <summary>
+        /// The title of the Console window.
+        /// </summary>
         public static string Title
         {
             get => System.Console.Title;
             set => System.Console.Title = value;
         }
 
+        /// <summary>
+        /// The length of indents in spaces.
+        /// </summary>
         public static int Indentation_Length { get; set; } = 2;
 
+        /// <summary>
+        /// The current foreground color that the Console is writing in.
+        /// </summary>
         public static ConsoleColor ForegroundColor
         {
             get => System.Console.ForegroundColor;
             set => System.Console.ForegroundColor = value;
         }
 
+        /// <summary>
+        /// The current background color that the Console is writing in.
+        /// </summary>
         public static ConsoleColor BackgroundColor
         {
             get => System.Console.BackgroundColor;
