@@ -600,9 +600,9 @@ namespace Talysoft.BetterConsole
         /// </summary>
         /// <param name="prompt">The prompt to be used.</param>
         /// <returns>True if Yes is selected, otherwise False.</returns>
-        public static bool EnterYesNo(string prompt)
+        public static bool EnterYesNo(string prompt = null)
         {
-            return EnterChoiceInlineIndex(new string[] { "Yes", "No" }, prompt, 0) == 0;//if canceled or No, this will return false
+            return EnterChoiceInlineIndex(new string[] { "Yes", "No" }, prompt ?? "", 0) == 0;//if canceled or No, this will return false
         }
 
         /// <summary>
