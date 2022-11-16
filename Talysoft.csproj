@@ -53,9 +53,6 @@
     <Compile Include="IO\Compression.cs" />
     <Compile Include="BetterConsole\Console.cs" />
     <Compile Include="Extensions.cs" />
-    <Compile Include="IO\Cryptography\CaesarCipher.cs" />
-    <Compile Include="IO\Cryptography\Cryptography.cs" />
-    <Compile Include="IO\Cryptography\Cipher.cs" />
     <Compile Include="IO\CSV.cs" />
     <Compile Include="IO\CSVAttribute.cs" />
     <Compile Include="IO\SaveLoad.cs" />

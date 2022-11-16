@@ -4,8 +4,6 @@ using System.Text;
 using System.Linq;
 using static Talysoft.Constants;
 using System.Collections.Generic;
-using Talysoft.Debugging;
-using System.Windows.Forms;
 
 namespace Talysoft.BetterConsole
 {
@@ -604,7 +602,7 @@ namespace Talysoft.BetterConsole
         /// <returns>True if Yes is selected, otherwise False.</returns>
         public static bool EnterYesNo(string prompt)
         {
-            return EnterChoiceIndex(new string[] { "Yes", "No" }, prompt, 0) == 0;//if canceled or No, this will return false
+            return EnterChoiceInlineIndex(new string[] { "Yes", "No" }, prompt, 0) == 0;//if canceled or No, this will return false
         }
 
         /// <summary>
@@ -744,6 +742,114 @@ namespace Talysoft.BetterConsole
         }
 
         /// <summary>
+        /// Prompts the user to enter their choice between a list of options, in one line.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="options"></param>
+        /// <param name="prompt"></param>
+        /// <param name="startIndex"></param>
+        /// <returns></returns>
+        public static T EnterChoiceInline<T>(IEnumerable<T> options, string prompt = "", int startIndex = 0)
+        {
+            int index = EnterChoiceInlineIndex(options, prompt, startIndex);
+
+            if (index >= 0)
+            {
+                return options.ElementAt(index);
+            } else
+            {
+                return default;
+            }
+        }
+
+        /// <summary>
+        /// Prompts the user to enter their choice between a list of options, in one line.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="options"></param>
+        /// <param name="prompt"></param>
+        /// <param name="startIndex"></param>
+        /// <returns></returns>
+        public static int EnterChoiceInlineIndex<T>(IEnumerable<T> options, string prompt = "", int startIndex = 0)
+        {
+            //cannot pick from an empty list
+            if (!options.Any()) return -1;
+
+            int selectedIndex = startIndex;
+            int optionCount = options.Count();
+
+            ConsoleKey key;
+
+            HideCursor();
+
+            int top = System.Console.CursorTop;
+
+            if (!string.IsNullOrWhiteSpace(prompt))
+            {
+                WritePrompt(prompt);
+                WriteLine();
+                WriteLine();
+            }
+
+            int offset = System.Console.CursorTop;
+
+            //first, print all of the options to the screen
+            PrintOptionsInline(options, startIndex);
+
+            WriteLine();
+            WriteLine();
+            WriteLine("Use the arrow keys to select an option.", 1);
+            WriteLine("Press Enter when you are done, or Escape to cancel.", 1);
+
+            do
+            {
+                key = ReadKey();
+
+                //handle if up or down is pressed
+                if (key == ConsoleKey.LeftArrow || key == ConsoleKey.RightArrow)
+                {
+                    // determine what to select
+                    switch (key)
+                    {
+                        case ConsoleKey.LeftArrow:
+                            selectedIndex = (selectedIndex + optionCount - 1) % optionCount;
+                            break;
+                        case ConsoleKey.RightArrow:
+                            selectedIndex = (selectedIndex + 1) % optionCount;
+                            break;
+                    }
+
+                    // print new list based on selected
+                    // write over last list
+                    SetCursorPosition(0, offset);
+                    PrintOptionsInline(options, selectedIndex);
+                }
+                else if (key == ConsoleKey.Escape)
+                {
+                    ClearLinesNoCursor(top + 1, offset + 4);
+                    return -1;
+                }
+            } while (key != ConsoleKey.Enter);
+
+            //clear the list, but not the whole screen
+            if (!string.IsNullOrWhiteSpace(prompt))
+            {
+                ClearLinesNoCursor(top, offset + 4);
+                WritePrompt(prompt);
+                Write(options.ElementAt(selectedIndex));
+                WriteLine();
+            }
+            else
+            {
+                ClearLinesNoCursor(top, offset + 4);
+            }
+
+            ShowCursor();
+
+            return selectedIndex;
+        }
+
+        /// <summary>
         /// Prints the list of options to the screen, within the given range.
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -758,6 +864,45 @@ namespace Talysoft.BetterConsole
             {
                 WriteLine("  " + options.ElementAt(i).ToString().PadRight(System.Console.BufferWidth - 2));
             }
+        }
+
+        /// <summary>
+        /// Prints the list of options to the screen, within the given range, with the selected item highlighted.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="options"></param>
+        /// <param name="selectedIndex"></param>
+        private static void PrintOptionsInline<T>(IEnumerable<T> options, int selectedIndex)
+        {
+            int count = options.Count();
+
+            ConsoleColor fg = ForegroundColor;
+            ConsoleColor bg = BackgroundColor;
+
+            for (int i = 0; i < count; i++)
+            {
+                // if selected, then "highlight"
+                if(i == selectedIndex)
+                {
+                    // selected
+                    ForegroundColor = bg;
+                    BackgroundColor = fg;
+                }
+
+                Write(options.ElementAt(i));
+
+                ForegroundColor = fg;
+                BackgroundColor = bg;
+
+                // space if needed
+                if (i < count - 1)
+                {
+                    Write(" ");
+                }
+            }
+
+            ForegroundColor = fg;
+            BackgroundColor = bg;
         }
 
         /// <summary>
