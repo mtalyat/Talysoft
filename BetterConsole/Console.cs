@@ -614,7 +614,7 @@ namespace Talysoft.BetterConsole
         /// <returns>True if Yes is selected, otherwise False.</returns>
         public static bool EnterYesNo(string prompt = null)
         {
-            return EnterChoiceInlineIndex(new string[] { "Yes", "No" }, prompt ?? "", 0) == 0;//if canceled or No, this will return false
+            return EnterChoiceIndex(new string[] { "Yes", "No" }, prompt ?? "", 0) == 0;//if canceled or No, this will return false
         }
 
         /// <summary>
@@ -661,7 +661,7 @@ namespace Talysoft.BetterConsole
 
             HideCursor();
 
-            int top = System.Console.CursorTop;
+            int offset = 0;
             int left = -1;
 
             if (!string.IsNullOrWhiteSpace(prompt))
@@ -670,19 +670,21 @@ namespace Talysoft.BetterConsole
                 left = System.Console.CursorLeft;
                 WriteLine();
                 WriteLine();
-            }
 
-            int offset = System.Console.CursorTop;
+                offset += 2;
+            }
 
             //first, print all of the options to the screen
             PrintOptions(options, startIndex, displayCount);
 
-            WriteLine();
-            WriteLine("Use the arrow keys to select an option.", 1);
-            WriteLine("Press Enter when you are done, or Escape to cancel.", 1);
+            offset += displayCount;
+
+            int bottom = System.Console.CursorTop;
+            int top = bottom - offset;
+            int optionsTop = top + (offset - displayCount);
 
             //print the initial >
-            WriteAt(IN_CHAR, 0, selectedIndex + offset);
+            WriteAt(IN_CHAR, 0, optionsTop + selectedIndex);
 
             int scroll = Mathematics.Math.Clamp(selectedIndex - displayCount / 2, 0, optionCount - 1 - displayCount);
 
@@ -728,11 +730,11 @@ namespace Talysoft.BetterConsole
                     PrintOptions(options, scroll, displayCount);
 
                     //write new position, offset by the scroll
-                    WriteAt(IN_CHAR, 0, selectedIndex - scroll + offset);
+                    WriteAt(IN_CHAR, 0, selectedIndex - scroll + optionsTop);
                 }
                 else if (key == ConsoleKey.Escape)
                 {
-                    ClearLinesNoCursor(top + 1, offset + displayCount + 3);
+                    ClearLinesNoCursor(top + 1, top + offset);
                     return -1;
                 }
             } while (key != ConsoleKey.Enter);
@@ -741,11 +743,11 @@ namespace Talysoft.BetterConsole
             if (left >= 0)
             {
                 WriteAt(options.ElementAt(selectedIndex), left, top);
-                ClearLinesNoCursor(top + 1, offset + displayCount + 3);
+                ClearLinesNoCursor(top + 1, offset + displayCount);
             }
             else
             {
-                ClearLinesNoCursor(top, offset + displayCount + 3);
+                ClearLinesNoCursor(top, offset + displayCount);
             }
 
             ShowCursor();
@@ -799,19 +801,14 @@ namespace Talysoft.BetterConsole
             if (!string.IsNullOrWhiteSpace(prompt))
             {
                 WritePrompt(prompt);
-                WriteLine();
-                WriteLine();
             }
 
-            int offset = System.Console.CursorTop;
+            int optionsLeft = System.Console.CursorLeft;
 
             //first, print all of the options to the screen
             PrintOptionsInline(options, startIndex);
 
-            WriteLine();
-            WriteLine();
-            WriteLine("Use the arrow keys to select an option.", 1);
-            WriteLine("Press Enter when you are done, or Escape to cancel.", 1);
+            int bottom = System.Console.CursorTop;
 
             do
             {
@@ -833,12 +830,12 @@ namespace Talysoft.BetterConsole
 
                     // print new list based on selected
                     // write over last list
-                    SetCursorPosition(0, offset);
+                    SetCursorPosition(optionsLeft, bottom);
                     PrintOptionsInline(options, selectedIndex);
                 }
                 else if (key == ConsoleKey.Escape)
                 {
-                    ClearLinesNoCursor(top + 1, offset + 4);
+                    ClearLinesNoCursor(top + 1, bottom);
                     return -1;
                 }
             } while (key != ConsoleKey.Enter);
@@ -846,14 +843,14 @@ namespace Talysoft.BetterConsole
             //clear the list, but not the whole screen
             if (!string.IsNullOrWhiteSpace(prompt))
             {
-                ClearLinesNoCursor(top, offset + 4);
+                ClearLinesNoCursor(top, bottom);
                 WritePrompt(prompt);
                 Write(options.ElementAt(selectedIndex));
                 WriteLine();
             }
             else
             {
-                ClearLinesNoCursor(top, offset + 4);
+                ClearLinesNoCursor(top, bottom);
             }
 
             ShowCursor();
@@ -874,7 +871,13 @@ namespace Talysoft.BetterConsole
 
             for (int i = start; i < start + count && i < optionsCount; i++)
             {
-                WriteLine("  " + options.ElementAt(i).ToString().PadRight(System.Console.BufferWidth - 2));
+                if (i < start + count - 1 && i < optionsCount - 1)
+                {
+                    WriteLine("  " + options.ElementAt(i).ToString().PadRight(System.Console.BufferWidth - 2));
+                } else
+                {
+                    WriteLine("  " + options.ElementAt(i).ToString().PadRight(System.Console.BufferWidth - 2));
+                }
             }
         }
 
