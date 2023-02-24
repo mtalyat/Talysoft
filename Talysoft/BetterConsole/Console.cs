@@ -9,6 +9,9 @@ namespace Talysoft.BetterConsole
 {
     public static class Console
     {
+        private const int DEFAULT_SELECTEDINDEX = 0;
+        private const int DEFAULT_DISPLAYCOUNT = 10;
+
         /// <summary>
         /// The title of the Console window.
         /// </summary>
@@ -626,7 +629,7 @@ namespace Talysoft.BetterConsole
         /// <param name="options">The options the user can select from.</param>
         /// <param name="startIndex">The index at which the user's selection starts on.</param>
         /// <returns>The selected option.</returns>
-        public static T EnterChoice<T>(IEnumerable<T> options, string prompt = "", int startIndex = 0, int displayCount = 10)
+        public static T EnterChoice<T>(IEnumerable<T> options, string prompt = "", int startIndex = DEFAULT_SELECTEDINDEX, int displayCount = DEFAULT_DISPLAYCOUNT)
         {
             int index = EnterChoiceIndex(options, prompt, startIndex, displayCount);
 
@@ -649,7 +652,7 @@ namespace Talysoft.BetterConsole
         /// <param name="options">The options the user can select from.</param>
         /// <param name="startIndex">The index at which the user's selection starts on.</param>
         /// <returns>The index of the selected option.</returns>
-        public static int EnterChoiceIndex<T>(IEnumerable<T> options, string prompt = "", int startIndex = 0, int displayCount = 10)
+        public static int EnterChoiceIndex<T>(IEnumerable<T> options, string prompt = "", int startIndex = DEFAULT_SELECTEDINDEX, int displayCount = DEFAULT_DISPLAYCOUNT)
         {
             //cannot pick from an empty list
             if (!options.Any()) return -1;
@@ -764,7 +767,7 @@ namespace Talysoft.BetterConsole
         /// <param name="prompt"></param>
         /// <param name="startIndex"></param>
         /// <returns></returns>
-        public static T EnterChoiceInline<T>(IEnumerable<T> options, string prompt = "", int startIndex = 0)
+        public static T EnterChoiceInline<T>(IEnumerable<T> options, string prompt = "", int startIndex = DEFAULT_SELECTEDINDEX)
         {
             int index = EnterChoiceIndexInline(options, prompt, startIndex);
 
@@ -785,7 +788,7 @@ namespace Talysoft.BetterConsole
         /// <param name="prompt"></param>
         /// <param name="startIndex"></param>
         /// <returns></returns>
-        public static int EnterChoiceIndexInline<T>(IEnumerable<T> options, string prompt = "", int startIndex = 0)
+        public static int EnterChoiceIndexInline<T>(IEnumerable<T> options, string prompt = "", int startIndex = DEFAULT_SELECTEDINDEX)
         {
             //cannot pick from an empty list
             if (!options.Any()) return -1;
@@ -857,6 +860,75 @@ namespace Talysoft.BetterConsole
             ShowCursor();
 
             return selectedIndex;
+        }
+
+        /// <summary>
+        /// Prompts the user to select multiple options from a list of options.
+        /// </summary>
+        /// <param name="options"></param>
+        /// <param name="prompt"></param>
+        /// <param name="startIndex"></param>
+        /// <returns></returns>
+        public static int[] EnterMultipleChoiceIndex<T>(IEnumerable<T> options, string prompt = "", int startIndex = DEFAULT_SELECTEDINDEX, int displayCount = DEFAULT_DISPLAYCOUNT)
+        {
+            int optionCount = options.Count();
+
+            bool[] selected = new bool[optionCount];
+
+            int count = optionCount + 1;// + 2 for "Done"
+
+            // generate list, print it, select from the list, continue
+            int selectedIndex = 0;
+
+            int i;
+
+            while(selectedIndex >= 0 && selectedIndex < count - 1)
+            {
+                // create list that will be displayed
+                List<string> list = new List<string>(count);
+
+                i = 0;
+                foreach (T item in options)
+                {
+                    // add to list based on if selected already or not
+                    list.Add($"[{(selected[i] ? "X" : " ")}] {item}");
+
+                    i++;
+                }
+
+                list.Add("Done");
+
+                // get selected index
+                selectedIndex = EnterChoiceIndex(list, prompt, startIndex, displayCount);
+
+                if(selectedIndex >= 0 && selectedIndex < optionCount)
+                {
+                    // toggle the option
+                    selected[selectedIndex] = !selected[selectedIndex];
+                }
+                // else: canceled or done
+            }
+
+            if(selectedIndex < 0)
+            {
+                // canceled
+                return null;
+            }
+
+            // did not cancel, selected "Done"
+            // get list of selected and return those indices
+
+            List<int> output = new List<int>();
+
+            for (i = 0; i < optionCount; i++)
+            {
+                if (selected[i])
+                {
+                    output.Add(i);
+                }
+            }
+
+            return output.ToArray();
         }
 
         /// <summary>
@@ -957,10 +1029,6 @@ namespace Talysoft.BetterConsole
             //first, print all of the options to the screen
             WriteLine($"/\\ [{value}] \\/");
 
-            WriteLine();
-            Write("Use the arrow keys to increment/decrement the value.\n", 1);
-            Write("Press Enter when you are done, or Escape to cancel.", 1);
-
             do
             {
                 key = ReadKey();
@@ -1003,10 +1071,10 @@ namespace Talysoft.BetterConsole
             if(left >= 0)
             {
                 WriteAt(value, left, top);
-                ClearLinesNoCursor(top + 1, offset + 4);
+                ClearLinesNoCursor(top + 1, offset + 1);
             } else
             {
-                ClearLinesNoCursor(top, offset + 4);
+                ClearLinesNoCursor(top, offset + 1);
             }
             
             ShowCursor();
