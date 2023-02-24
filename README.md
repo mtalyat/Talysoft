@@ -16,14 +16,14 @@ Here are a list of examples:
 
 | Code | Console |
 |---|---|
-| `bool result = Console.EnterYesNo("Will you use this library?");` | ![Console.EnterYesNo() in the console](https://github.com/mtalyat/Talysoft/Images/Q-YN.png) |
-| `string result = Console.EnterChoiceInline(new string[] { "Maybe", "Yes", "No" }, "Now will you use this library?", 1);` | ![Console.EnterChoiceInline() in the console](https://github.com/mtalyat/Talysoft/Images/Q-Inline.png) |
-| `string result = Console.EnterChoice(new string[] { "Maybe", "Yes", "No" }, "Now will you use this library?", 1);` | ![Console.EnterChoice() in the console](https://github.com/mtalyat/Talysoft/Images/Q-List.png) |
-| `string result = Console.EnterPath("Enter a PNG file.", "C:\\", ".png");` | ![Console.EnterPath() in the console](https://github.com/mtalyat/Talysoft/Images/Q-Path.png) |
+| `bool result = Console.EnterYesNo("Will you use this library?");` | ![Console.EnterYesNo() in the console](https://github.com/mtalyat/Talysoft/blob/main/Images/Q-YN.png) |
+| `string result = Console.EnterChoiceInline(new string[] { "Maybe", "Yes", "No" }, "Now will you use this library?", 1);` | ![Console.EnterChoiceInline() in the console](https://github.com/mtalyat/Talysoft/blob/main/Images/Q-Inline.png) |
+| `string result = Console.EnterChoice(new string[] { "Maybe", "Yes", "No" }, "Now will you use this library?", 1);` | ![Console.EnterChoice() in the console](https://github.com/mtalyat/Talysoft/blob/main/Images/Q-List.png) |
+| `string result = Console.EnterPath("Enter a PNG file.", "C:\\", ".png");` | ![Console.EnterPath() in the console](https://github.com/mtalyat/Talysoft/blob/main/Images/Q-Path.png) |
 
 After an option has been selected, the result will be printed to the terminal following the prompt. For instance, using the EnterYesNo() method example, the result after selecting an option would be:
 
-![Console.EnterYesNo() result in the console](https://github.com/mtalyat/Talysoft/Images/Q-YN-Result.png)
+![Console.EnterYesNo() result in the console](https://github.com/mtalyat/Talysoft/blob/main/Images/Q-YN-Result.png)
 
 ## Math (Talysoft.Mathematics)
 
