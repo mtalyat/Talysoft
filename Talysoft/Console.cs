@@ -784,51 +784,48 @@ namespace Talysoft
             {
                 key = ReadKey();
 
-                //handle if up or down is pressed
-                if (key == ConsoleKey.UpArrow || key == ConsoleKey.DownArrow ||
-                    key == ConsoleKey.PageUp || key == ConsoleKey.PageDown)
-                {
-                    //clear current position
-                    WriteAt(" ", 0, selectedIndex - scroll + optionsTop);
-
-                    // determine what to select
-                    switch (key)
-                    {
-                        case ConsoleKey.UpArrow:
-                            selectedIndex = (selectedIndex + optionCount - 1) % optionCount;
-                            break;
-                        case ConsoleKey.DownArrow:
-                            selectedIndex = (selectedIndex + 1) % optionCount;
-                            break;
-                        case ConsoleKey.PageUp:
-                            if (selectedIndex == 0)
-                                selectedIndex = optionCount - 1;
-                            else
-                                selectedIndex = Math.Max(0, selectedIndex - 10);
-                            break;
-                        case ConsoleKey.PageDown:
-                            if (selectedIndex == optionCount - 1)
-                                selectedIndex = 0;
-                            else
-                                selectedIndex = Math.Min(optionCount - 1, selectedIndex + 10);
-                            break;
-                    }
-                    
-                    // clamp scroll
-                    scroll = Mathematics.BasicMath.Clamp(selectedIndex - displayCount / 2, 0, optionCount - 1 - (displayCount - 1));
-
-                    // print new list based on scroll
-                    SetCursorPosition(0, optionsTop);
-                    PrintOptions(options, scroll, count);
-
-                    //write new position, offset by the scroll
-                    WriteAt(IN_CHAR, 0, selectedIndex - scroll + optionsTop);
-                }
-                else if (key == ConsoleKey.Escape)
+                if (key == ConsoleKey.Escape)
                 {
                     ClearLinesNoCursor(top + 1, top + offset);
                     return -1;
                 }
+
+                //clear current position
+                WriteAt(" ", 0, selectedIndex - scroll + optionsTop);
+
+                // determine what to select
+                switch (key)
+                {
+                    case ConsoleKey.UpArrow:
+                        selectedIndex = (selectedIndex + optionCount - 1) % optionCount;
+                        break;
+                    case ConsoleKey.DownArrow:
+                    case ConsoleKey.Tab:
+                        selectedIndex = (selectedIndex + 1) % optionCount;
+                        break;
+                    case ConsoleKey.PageUp:
+                        if (selectedIndex == 0)
+                            selectedIndex = optionCount - 1;
+                        else
+                            selectedIndex = Math.Max(0, selectedIndex - 10);
+                        break;
+                    case ConsoleKey.PageDown:
+                        if (selectedIndex == optionCount - 1)
+                            selectedIndex = 0;
+                        else
+                            selectedIndex = Math.Min(optionCount - 1, selectedIndex + 10);
+                        break;
+                }
+
+                // clamp scroll
+                scroll = Mathematics.BasicMath.Clamp(selectedIndex - displayCount / 2, 0, optionCount - 1 - (displayCount - 1));
+
+                // print new list based on scroll
+                SetCursorPosition(0, optionsTop);
+                PrintOptions(options, scroll, count);
+
+                //write new position, offset by the scroll
+                WriteAt(IN_CHAR, 0, selectedIndex - scroll + optionsTop);
             } while (key != ConsoleKey.Enter);
 
             //clear the list, but not the whole screen
@@ -906,30 +903,28 @@ namespace Talysoft
             {
                 key = ReadKey();
 
-                //handle if up or down is pressed
-                if (key == ConsoleKey.LeftArrow || key == ConsoleKey.RightArrow)
-                {
-                    // determine what to select
-                    switch (key)
-                    {
-                        case ConsoleKey.LeftArrow:
-                            selectedIndex = (selectedIndex + optionCount - 1) % optionCount;
-                            break;
-                        case ConsoleKey.RightArrow:
-                            selectedIndex = (selectedIndex + 1) % optionCount;
-                            break;
-                    }
-
-                    // print new list based on selected
-                    // write over last list
-                    SetCursorPosition(optionsLeft, bottom);
-                    PrintOptionsInline(options, selectedIndex);
-                }
-                else if (key == ConsoleKey.Escape)
+                if (key == ConsoleKey.Escape)
                 {
                     ClearLinesNoCursor(top + 1, bottom);
                     return -1;
                 }
+
+                // determine what to select
+                switch (key)
+                {
+                    case ConsoleKey.LeftArrow:
+                        selectedIndex = (selectedIndex + optionCount - 1) % optionCount;
+                        break;
+                    case ConsoleKey.RightArrow:
+                    case ConsoleKey.Tab:
+                        selectedIndex = (selectedIndex + 1) % optionCount;
+                        break;
+                }
+
+                // print new list based on selected
+                // write over last list
+                SetCursorPosition(optionsLeft, bottom);
+                PrintOptionsInline(options, selectedIndex);
             } while (key != ConsoleKey.Enter);
 
             //clear the list, but not the whole screen
