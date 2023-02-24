@@ -1,5 +1,7 @@
 # Talysoft
  A utility library, created by Mitchell Talyat.
+ 
+ Note: this library is constantly changing. Some methods may be deleted or rewritten as time progresses, until this project is at a stable state.
 
 # Features
 
