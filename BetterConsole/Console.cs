@@ -1185,6 +1185,19 @@ namespace Talysoft.BetterConsole
             return Read<T>();
         }
 
+        /// <summary>
+        /// Prompts the user to enter a string on the same line.
+        /// </summary>
+        /// <param name="prompt">The prompt to give the user.</param>
+        /// <returns>The value entered by the user.</returns>
+        public static string EnterString(string prompt)
+        {
+            WritePrompt(prompt);
+
+            return ReadString();
+        }
+
+        //writes a prompt to the screen
         private static void WritePrompt(string prompt)
         {
             //if no punctuation at the end, add some
