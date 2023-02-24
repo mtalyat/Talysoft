@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 namespace Talysoft.Mathematics
 {
     /// <summary>
-    /// Provides addition Math calculations.
+    /// Provides addition math calculations.
     /// </summary>
-    public static class Math
+    public static class BasicMath
     {
         #region Trigonometry
 

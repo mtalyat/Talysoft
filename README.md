@@ -29,19 +29,31 @@ After an option has been selected, the result will be printed to the terminal fo
 
 ![Console.EnterYesNo() result in the console](https://github.com/mtalyat/Talysoft/blob/main/Images/Q-YN-Result.png)
 
-## Math (Talysoft.Mathematics)
+## Advanced Math Processing (Talysoft.Mathematics)
 
-There are many useful Math classes implemented into Talysoft. This includes, but is not limited to:
+The Talysoft Math system allows for an easy way of manipulating math equations. By taking equations and splitting them up into tokens and expressions, any math equation can be represented by objects in the code, including custom functions.
 
-* int2
-* float2
-* decimal2
-* Math
-* Sort
-* Statistics
-* IMathematical
+Math can be broken up as follows:
 
-### Math
+| Object | Description | Example(s) |
+| --- | --- | --- |
+| Number | A constant number value. | 5 |
+| Constant | A constant in math. | PI |
+| Variable | A variable in math. | x |
+| Operand | A value that can be operated on. | x, 5, PI, etc. |
+| Operator | An operation that can be conducted on operands, represented by a symbol. | +, -, *, /, etc. |
+| Term | A collection of operands that has a numerator and a denominator. All numerator and denominator values will be multiplied together. | 3x^2, 4x/3y, etc. |
+| Expression | A collection of terms that are added together. | x^2 + x + 1 |
+| Equation | A set of two expressions that are equal to one another. | 2x = 3y |
+| Function | A set of operations that are more specific and not represented with a symbol. | cos(2x) |
+
+Math can also be solved using the power of a Scope. A Scope is a collection of values that are associated with equations, such as knowing about a variable named 'x', which is equal to 5. Using this information, values can be simplified and solved.
+
+In addition to that, Mathematics also provides a way to parse equations from strings, using the Parse class. A ParsingException will be thrown if there is an error in the parsing process, which will include error information in the exception. Alternatively, there are TryParse methods, but these will return true or false instead of throwing an exception.
+
+Mathematics also provide some additional helper classes.
+
+### BasicMath
 
 The Math class provides additional methods to the System.Math class, such as:
 

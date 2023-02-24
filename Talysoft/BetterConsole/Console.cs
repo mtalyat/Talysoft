@@ -4,7 +4,7 @@ using System.Text;
 using System.Linq;
 using static Talysoft.Constants;
 using System.Collections.Generic;
-using Talysoft;
+using Talysoft.Mathematics;
 
 namespace Talysoft.BetterConsole
 {
@@ -45,6 +45,11 @@ namespace Talysoft.BetterConsole
             set => System.Console.BackgroundColor = value;
         }
 
+        static Console()
+        {
+            System.Console.OutputEncoding = Encoding.Unicode;
+        }
+
         #region Cursor
 
         /// <summary>
@@ -70,7 +75,7 @@ namespace Talysoft.BetterConsole
         /// <param name="top">The distance from the top of the buffer.</param>
         public static void SetCursorPosition(int left, int top)
         {
-            System.Console.SetCursorPosition(Mathematics.Math.Clamp(left, 0, System.Console.BufferWidth - 1), Mathematics.Math.Clamp(top, 0, System.Console.BufferHeight - 1));
+            System.Console.SetCursorPosition(Mathematics.BasicMath.Clamp(left, 0, System.Console.BufferWidth - 1), Mathematics.BasicMath.Clamp(top, 0, System.Console.BufferHeight - 1));
         }
 
         #endregion
@@ -392,6 +397,88 @@ namespace Talysoft.BetterConsole
         }
 
         /// <summary>
+        /// Reads a Mathematics Token from the input stream.
+        /// </summary>
+        /// <returns></returns>
+        public static Token ReadToken()
+        {
+            int start = System.Console.CursorTop;
+            int left = System.Console.CursorLeft;
+
+            int attempts = 0;
+
+            Token t;
+
+            while (true)
+            {
+                try
+                {
+                    t = Parse.ParseToken(ReadString());
+                    break;
+                }
+                catch (ParsingException pe)
+                {
+                    WriteLine($"Invalid input. Error: \"{pe.Message}\"");
+                    attempts++;
+                }
+            }
+
+            if (attempts > 0)
+            {
+                //if attempted more than once, clear all attempts
+                WriteAt(new string(' ', System.Console.BufferWidth - start), left, start);
+                ClearLines(start + 1, start + attempts * 2);
+
+                //then print the result
+                WriteAt(t, left, start);
+                WriteLine();
+            }
+
+            return t;
+        }
+
+        /// <summary>
+        /// Reads a Mathematics Equation from the input stream.
+        /// </summary>
+        /// <returns></returns>
+        public static Equation ReadEquation()
+        {
+            int start = System.Console.CursorTop;
+            int left = System.Console.CursorLeft;
+
+            int attempts = 0;
+
+            Equation t;
+
+            while (true)
+            {
+                try
+                {
+                    t = Parse.ParseEquation(ReadString());
+                    break;
+                }
+                catch(ParsingException pe)
+                {
+                    WriteLine($"Invalid input. Error: \"{pe.Message}\"");
+                    attempts++;
+                }
+            }
+
+            if (attempts > 0)
+            {
+                //if attempted more than once, clear all attempts
+                WriteAt(new string(' ', System.Console.BufferWidth - start), left, start);
+                ClearLines(start + 1, start + attempts * 2);
+
+                //then print the result
+                WriteAt(t, left, start);
+                WriteLine();
+            }
+
+            return t;
+        }
+
+        /// <summary>
         /// Reads a T from the input stream.
         /// </summary>
         /// <typeparam name="T">A type that inherits IConvertible.</typeparam>
@@ -412,9 +499,9 @@ namespace Talysoft.BetterConsole
                     t = (T)Convert.ChangeType(ReadString(), typeof(T));
                     break;
                 }
-                catch
+                catch(Exception e)
                 {
-                    WriteLine($"Invalid input. Please enter a valid {typeof(T).Name}.");
+                    WriteLine($"Invalid input. Please enter a valid {typeof(T).Name}. Error: \"{e.Message}\"");
                     attempts++;
                 }
             }
@@ -728,7 +815,7 @@ namespace Talysoft.BetterConsole
                     }
                     
                     // clamp scroll
-                    scroll = Mathematics.Math.Clamp(selectedIndex - displayCount / 2, 0, optionCount - 1 - (displayCount - 1));
+                    scroll = Mathematics.BasicMath.Clamp(selectedIndex - displayCount / 2, 0, optionCount - 1 - (displayCount - 1));
 
                     // print new list based on scroll
                     SetCursorPosition(0, optionsTop);
@@ -1279,6 +1366,20 @@ namespace Talysoft.BetterConsole
                     return finalPath;
                 }
             }
+        }
+
+        public static Token EnterToken(string prompt = "")
+        {
+            WritePrompt(prompt);
+
+            return ReadToken();
+        }
+
+        public static Equation EnterEquation(string prompt = "")
+        {
+            WritePrompt(prompt);
+
+            return ReadEquation();
         }
 
         /// <summary>
