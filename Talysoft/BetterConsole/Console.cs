@@ -4,6 +4,7 @@ using System.Text;
 using System.Linq;
 using static Talysoft.Constants;
 using System.Collections.Generic;
+using Talysoft;
 
 namespace Talysoft.BetterConsole
 {
@@ -868,9 +869,39 @@ namespace Talysoft.BetterConsole
         /// <param name="options"></param>
         /// <param name="prompt"></param>
         /// <param name="startIndex"></param>
+        /// <param name="displayCount"></param>
+        /// <returns></returns>
+        public static T[] EnterMultipleChoice<T>(IEnumerable<T> options, string prompt = "", int startIndex = DEFAULT_SELECTEDINDEX, int displayCount = DEFAULT_DISPLAYCOUNT)
+        {
+            int[] indices = EnterMultipleChoiceIndex(options, prompt, startIndex, displayCount);
+
+            if(indices == null)
+            {
+                return null;
+            }
+
+            List<T> result = new List<T>(indices.Length);
+
+            foreach(int i in indices)
+            {
+                result.Add(options.ElementAt(i));
+            }
+
+            return result.ToArray();
+        }
+
+        /// <summary>
+        /// Prompts the user to select multiple options from a list of options.
+        /// </summary>
+        /// <param name="options"></param>
+        /// <param name="prompt"></param>
+        /// <param name="startIndex"></param>
+        /// <param name="displayCount"></param>
         /// <returns></returns>
         public static int[] EnterMultipleChoiceIndex<T>(IEnumerable<T> options, string prompt = "", int startIndex = DEFAULT_SELECTEDINDEX, int displayCount = DEFAULT_DISPLAYCOUNT)
         {
+            int top = System.Console.CursorTop;
+
             int optionCount = options.Count();
 
             bool[] selected = new bool[optionCount];
@@ -878,7 +909,7 @@ namespace Talysoft.BetterConsole
             int count = optionCount + 1;// + 2 for "Done"
 
             // generate list, print it, select from the list, continue
-            int selectedIndex = 0;
+            int selectedIndex = startIndex;
 
             int i;
 
@@ -899,7 +930,7 @@ namespace Talysoft.BetterConsole
                 list.Add("Done");
 
                 // get selected index
-                selectedIndex = EnterChoiceIndex(list, prompt, startIndex, displayCount);
+                selectedIndex = EnterChoiceIndex(list, prompt, selectedIndex, displayCount);
 
                 if(selectedIndex >= 0 && selectedIndex < optionCount)
                 {
@@ -907,6 +938,11 @@ namespace Talysoft.BetterConsole
                     selected[selectedIndex] = !selected[selectedIndex];
                 }
                 // else: canceled or done
+
+                // clear top line and return to it
+
+                ClearLine(top);
+                SetCursorPosition(0, top);
             }
 
             if(selectedIndex < 0)
@@ -928,7 +964,17 @@ namespace Talysoft.BetterConsole
                 }
             }
 
-            return output.ToArray();
+            int[] arr = output.ToArray();
+
+            // write final result
+            List<string> selectedText = new List<string>(arr.Length);
+            for (i = 0; i < arr.Length; i++)
+            {
+                selectedText.Add(options.ElementAt(arr[i]).ToString());
+            }
+            WriteResult(prompt, selectedText.ToArray().ArrayToString(), top);
+
+            return arr;
         }
 
         /// <summary>
@@ -1183,9 +1229,7 @@ namespace Talysoft.BetterConsole
                 if(left >= 0)
                 {
                     // just show prompt with no output
-                    ClearLine(top);
-                    WritePrompt(prompt);
-                    WriteLine();
+                    WriteResult(prompt, "", top);
                 }
                 else
                 {
@@ -1225,10 +1269,7 @@ namespace Talysoft.BetterConsole
                     // print result if a prompt
                     if(left >= 0)
                     {
-                        ClearLine(top);
-                        WritePrompt(prompt);
-                        Write(finalPath);
-                        WriteLine();
+                        WriteResult(prompt, finalPath, top);
                     }
                     else
                     {
@@ -1273,6 +1314,13 @@ namespace Talysoft.BetterConsole
                 prompt += ":";
 
             Write(prompt + " ");
+        }
+
+        private static void WriteResult(string prompt, string result, int top)
+        {
+            ClearLine(top);
+            WritePrompt(prompt);
+            WriteLine(result);
         }
 
         #endregion

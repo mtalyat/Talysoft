@@ -23,6 +23,7 @@ Here are a list of examples:
 | `string result = Console.EnterChoice(new string[] { "Maybe", "Yes", "No" }, "Now will you use this library?", 1);` | ![Console.EnterChoice() in the console](https://github.com/mtalyat/Talysoft/blob/main/Images/Q-List.png) |
 | `string result = Console.EnterPath("Enter a PNG file.", "C:\\", ".png");` | ![Console.EnterPath() in the console](https://github.com/mtalyat/Talysoft/blob/main/Images/Q-Path.png) |
 | `double result = Console.EnterNumber(50, 1, 0, 100, "Enter a number between 0 and 100.");` | ![Console.EnterNumber() in the console](https://github.com/mtalyat/Talysoft/blob/main/Images/Q-Number.png) |
+| `string[] result = Console.EnterMultipleChoice(new string[] { "Red", "Yellow", "Green", "Blue" }, "Select the colors you like.");` | ![Console.EnterMultipleChoice() in the console](https://github.com/mtalyat/Talysoft/blob/main/Images/Q-Multiple.png) |
 
 After an option has been selected, the result will be printed to the terminal following the prompt. For instance, using the EnterYesNo() method example, the result after selecting an option would be:
 
