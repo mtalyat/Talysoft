@@ -8,7 +8,7 @@ using System.IO;
 namespace Talysoft.IO
 {
     /// <summary>
-    /// Provides functionality for 
+    /// Provides an interface for saving and loading binary data.
     /// </summary>
     public interface ISaveable
     {

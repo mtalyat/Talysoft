@@ -614,7 +614,7 @@ namespace Talysoft.BetterConsole
         /// <returns>True if Yes is selected, otherwise False.</returns>
         public static bool EnterYesNo(string prompt = null)
         {
-            return EnterChoiceIndex(new string[] { "Yes", "No" }, prompt ?? "", 0) == 0;//if canceled or No, this will return false
+            return EnterChoiceIndexInline(new string[] { "Yes", "No" }, prompt ?? "", 0) == 0;//if canceled or No, this will return false
         }
 
         /// <summary>
@@ -677,7 +677,7 @@ namespace Talysoft.BetterConsole
             int count = Math.Min(displayCount, optionCount);
 
             //first, print all of the options to the screen
-            PrintOptions(options, startIndex, count);
+            PrintOptions(options, 0, count);
             offset += count;
 
             int bottom = System.Console.CursorTop;
@@ -766,7 +766,7 @@ namespace Talysoft.BetterConsole
         /// <returns></returns>
         public static T EnterChoiceInline<T>(IEnumerable<T> options, string prompt = "", int startIndex = 0)
         {
-            int index = EnterChoiceInlineIndex(options, prompt, startIndex);
+            int index = EnterChoiceIndexInline(options, prompt, startIndex);
 
             if (index >= 0)
             {
@@ -785,7 +785,7 @@ namespace Talysoft.BetterConsole
         /// <param name="prompt"></param>
         /// <param name="startIndex"></param>
         /// <returns></returns>
-        public static int EnterChoiceInlineIndex<T>(IEnumerable<T> options, string prompt = "", int startIndex = 0)
+        public static int EnterChoiceIndexInline<T>(IEnumerable<T> options, string prompt = "", int startIndex = 0)
         {
             //cannot pick from an empty list
             if (!options.Any()) return -1;

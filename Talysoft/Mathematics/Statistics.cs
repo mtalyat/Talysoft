@@ -12,7 +12,7 @@ namespace Talysoft.Mathematics
     public static class Statistics
     {
         /// <summary>
-        /// Gives the Median of the given data. Assuming data has been sorted.
+        /// Finds the Median of the given data. Assuming data has been sorted.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="data"></param>
