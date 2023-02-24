@@ -674,19 +674,20 @@ namespace Talysoft.BetterConsole
                 offset += 2;
             }
 
-            //first, print all of the options to the screen
-            PrintOptions(options, startIndex, displayCount);
+            int count = Math.Min(displayCount, optionCount);
 
-            offset += displayCount;
+            //first, print all of the options to the screen
+            PrintOptions(options, startIndex, count);
+            offset += count;
 
             int bottom = System.Console.CursorTop;
             int top = bottom - offset;
-            int optionsTop = top + (offset - displayCount);
+            int optionsTop = top + (offset - count);
 
             //print the initial >
             WriteAt(IN_CHAR, 0, optionsTop + selectedIndex);
 
-            int scroll = Mathematics.Math.Clamp(selectedIndex - displayCount / 2, 0, optionCount - 1 - displayCount);
+            int scroll = 0;
 
             do
             {
@@ -697,7 +698,7 @@ namespace Talysoft.BetterConsole
                     key == ConsoleKey.PageUp || key == ConsoleKey.PageDown)
                 {
                     //clear current position
-                    WriteAt(" ", 0, selectedIndex - scroll + offset);
+                    WriteAt(" ", 0, selectedIndex - scroll + optionsTop);
 
                     // determine what to select
                     switch (key)
@@ -726,8 +727,8 @@ namespace Talysoft.BetterConsole
                     scroll = Mathematics.Math.Clamp(selectedIndex - displayCount / 2, 0, optionCount - 1 - (displayCount - 1));
 
                     // print new list based on scroll
-                    SetCursorPosition(0, offset);
-                    PrintOptions(options, scroll, displayCount);
+                    SetCursorPosition(0, optionsTop);
+                    PrintOptions(options, scroll, count);
 
                     //write new position, offset by the scroll
                     WriteAt(IN_CHAR, 0, selectedIndex - scroll + optionsTop);
