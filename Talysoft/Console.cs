@@ -6,7 +6,7 @@ using static Talysoft.Constants;
 using System.Collections.Generic;
 using Talysoft.Mathematics;
 
-namespace Talysoft.BetterConsole
+namespace Talysoft
 {
     public static class Console
     {

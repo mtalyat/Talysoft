@@ -5,13 +5,13 @@
 
 # Features
 
-## A Better Console (Talysoft.BetterConsole)
+## A Better Console (Talysoft)
 
 Talysoft provides a Console that has a multitude of helpful methods, in addition to all of the existing default C# Console class. Better Console contains methods for writing and reading, as well as cursor movement. In addition to that, it also contains methods for providing a nice user interface for entering other types of information, such as selecting an item within a list, selecting an option from multiple options, selecting a file path from the system, and entering any type of class that inherits IConvertible. In the terminal, all options can be selected using the arrow keys or tab, and enter to select an option.
 
 If you would like to use this Console over System.Console, use the following code at the top of your document with the rest of the using statements:
 ```
-using static Console = Talysoft.BetterConsole.Console;
+using static Console = Talysoft.Console;
 ```
 
 Here are a list of examples:
