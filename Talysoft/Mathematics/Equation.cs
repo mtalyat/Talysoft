@@ -107,5 +107,53 @@ namespace Talysoft.Mathematics
         {
             return new Equation(left.Clone(), right.Clone());
         }
+
+        #region Parsing
+
+        /// <summary>
+        /// Parses a string into an Equation.
+        /// </summary>
+        /// <param name="s"></param>
+        /// <returns></returns>
+        public static Equation Parse(string s)
+        {
+            string[] split = s.ToString().Split(Symbols.EQUALS);
+
+            if (split.Length < 2)
+            {
+                throw new ParsingException("The given object must include an equals sign!", Symbols.EQUALS);
+            }
+            else if (split.Length > 2)
+            {
+                throw new ParsingException("The given object must include only one equals sign!", Symbols.EQUALS);
+            }
+
+            //if split correctly, parse each side for the equation
+            return new Equation(Token.Parse(split[0]), Token.Parse(split[1]));
+        }
+
+        /// <summary>
+        /// Attempts to pare a string into an Equation.
+        /// </summary>
+        /// <param name="s"></param>
+        /// <param name="equation"></param>
+        /// <returns></returns>
+        public static bool TryParse(string s, ref Equation equation)
+        {
+            try
+            {
+                equation = Parse(s);
+            }
+            catch
+            {
+                // did not parse
+                return false;
+            }
+
+            // parsed successfully
+            return true;
+        }
+
+        #endregion
     }
 }

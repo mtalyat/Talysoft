@@ -180,6 +180,8 @@ namespace Talysoft.Mathematics
 
         #endregion
 
+        #region Conversions
+
         /// <summary>
         /// Converts this Token into a Number, if able.
         /// Use IsNumber or IsConstant before ToNumber, otherwise there may be unexpected results.
@@ -222,5 +224,47 @@ namespace Talysoft.Mathematics
 
             return sb.ToString();
         }
+
+        #endregion
+
+        #region Parsing
+
+        /// <summary>
+        /// Parses a string into a Token.
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public static Token Parse(object o)
+        {
+            //split the string into stringified tokens
+            //turn those tokens into managable ParseTokens
+            //shuffle the parse tokens from infix notation to postfix notation
+            //evaluate the postfix notation into a singular token
+            return Mathematics.Parse.PostfixToToken(Mathematics.Parse.InfixToPostfix(Mathematics.Parse.StringTokensToParseTokens(Mathematics.Parse.SplitString(o.ToString())))).Reduce();
+        }
+
+        /// <summary>
+        /// Attempts to parse a string into a Token.
+        /// </summary>
+        /// <param name="s"></param>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        public static bool TryParse(string s, ref Token token)
+        {
+            try
+            {
+                token = Parse(s);
+            }
+            catch
+            {
+                // did not parse
+                return false;
+            }
+
+            // parsed successfully
+            return true;
+        }
+
+        #endregion
     }
 }

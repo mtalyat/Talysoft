@@ -9,7 +9,7 @@ namespace Talysoft.Mathematics
     /// <summary>
     /// The Parse class is used to Parse other types into Talysoft.Mathematics tokens.
     /// </summary>
-    public static partial class Parse
+    internal static partial class Parse
     {
         /*
          * In the future...
@@ -51,88 +51,6 @@ namespace Talysoft.Mathematics
             }
         }
 
-        #region Parsing
-
-        /// <summary>
-        /// Parses a string into an Equation.
-        /// </summary>
-        /// <param name="s"></param>
-        /// <returns></returns>
-        public static Equation ParseEquation(string s)
-        {
-            string[] split = s.ToString().Split(Symbols.EQUALS);
-
-            if(split.Length < 2)
-            {
-                throw new ParsingException("The given object must include an equals sign!", Symbols.EQUALS);
-            } else if (split.Length > 2)
-            {
-                throw new ParsingException("The given object must include only one equals sign!", Symbols.EQUALS);
-            }
-
-            //if split correctly, parse each side for the equation
-            return new Equation(ParseToken(split[0]), ParseToken(split[1]));
-        }
-
-        /// <summary>
-        /// Attempts to pare a string into an Equation.
-        /// </summary>
-        /// <param name="s"></param>
-        /// <param name="equation"></param>
-        /// <returns></returns>
-        public static bool TryParseEquation(string s, ref Equation equation)
-        {
-            try
-            {
-                equation = ParseEquation(s);
-            } catch
-            {
-                // did not parse
-                return false;
-            }
-
-            // parsed successfully
-            return true;
-        }
-
-        /// <summary>
-        /// Parses a string into a Token.
-        /// </summary>
-        /// <param name="str"></param>
-        /// <returns></returns>
-        public static Token ParseToken(object o)
-        {
-            //split the string into stringified tokens
-            //turn those tokens into managable ParseTokens
-            //shuffle the parse tokens from infix notation to postfix notation
-            //evaluate the postfix notation into a singular token
-            return PostfixToToken(InfixToPostfix(StringTokensToParseTokens(SplitString(o.ToString())))).Reduce();
-        }
-
-        /// <summary>
-        /// Attempts to parse a string into a Token.
-        /// </summary>
-        /// <param name="s"></param>
-        /// <param name="token"></param>
-        /// <returns></returns>
-        public static bool TryParseToken(string s, ref Token token)
-        {
-            try
-            {
-                token = ParseToken(s);
-            }
-            catch
-            {
-                // did not parse
-                return false;
-            }
-
-            // parsed successfully
-            return true;
-        }
-
-        #endregion
-
         #region Helper Methods
 
         /// <summary>
@@ -140,7 +58,7 @@ namespace Talysoft.Mathematics
         /// </summary>
         /// <param name="str"></param>
         /// <returns></returns>
-        private static string[] SplitString(string str)
+        internal static string[] SplitString(string str)
         {
             List<string> output = new List<string>();
 
@@ -242,7 +160,7 @@ namespace Talysoft.Mathematics
         /// </summary>
         /// <param name="strs"></param>
         /// <returns></returns>
-        private static ParsingToken[] StringTokensToParseTokens(string[] strs)
+        internal static ParsingToken[] StringTokensToParseTokens(string[] strs)
         {
             return strs.Select(s => new ParsingToken(s)).ToArray();
         }
@@ -252,7 +170,7 @@ namespace Talysoft.Mathematics
         /// </summary>
         /// <param name="inTokens"></param>
         /// <returns></returns>
-        private static ParsingToken[] InfixToPostfix(ParsingToken[] inTokens)
+        internal static ParsingToken[] InfixToPostfix(ParsingToken[] inTokens)
         {
             Queue<ParsingToken> tokens = new Queue<ParsingToken>(inTokens);
 
@@ -386,7 +304,7 @@ namespace Talysoft.Mathematics
         /// </summary>
         /// <param name="inTokens"></param>
         /// <returns></returns>
-        private static Token PostfixToToken(ParsingToken[] inTokens)
+        internal static Token PostfixToToken(ParsingToken[] inTokens)
         {
             if (inTokens.Length == 0) return Number.Zero;
 
@@ -473,7 +391,7 @@ namespace Talysoft.Mathematics
         /// <param name="left"></param>
         /// <param name="right"></param>
         /// <returns></returns>
-        private static Token EvaluateOperator(char op, Token left, Token right)
+        internal static Token EvaluateOperator(char op, Token left, Token right)
         {
             Function f;
 

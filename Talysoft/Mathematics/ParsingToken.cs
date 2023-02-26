@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Talysoft.Mathematics
 {
-    public static partial class Parse
+    internal static partial class Parse
     {
-        class ParsingToken
+        internal class ParsingToken
         {
             /// <summary>
             /// The string token inside of this ParseToken.
