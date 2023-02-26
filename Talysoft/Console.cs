@@ -413,7 +413,7 @@ namespace Talysoft
             {
                 try
                 {
-                    t = Parse.ParseToken(ReadString());
+                    t = Token.Parse(ReadString());
                     break;
                 }
                 catch (ParsingException pe)
@@ -454,7 +454,7 @@ namespace Talysoft
             {
                 try
                 {
-                    t = Parse.ParseEquation(ReadString());
+                    t = Equation.Parse(ReadString());
                     break;
                 }
                 catch(ParsingException pe)
