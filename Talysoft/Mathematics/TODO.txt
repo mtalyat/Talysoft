@@ -1,9 +1,6 @@
 ﻿TODO:
 
 Equation:
-- GetScope
-  * Find all variables within a Token, recursively
-  * Add method to Token class
 - Solve
   * THIS METHOD OF SOLVING MAY BE FAULTY
   * Look at scope
