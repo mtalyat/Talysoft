@@ -43,19 +43,6 @@ namespace Talysoft.Mathematics
             throw new NotImplementedException();
         }
 
-        /// <summary>
-        /// Finds all Variables within this Equation, adds them to a Scope and returns it.
-        /// </summary>
-        /// <returns></returns>
-        private Scope GetScope()
-        {
-            Scope scope = new Scope();
-            
-            //check out TODO.txt
-
-            return scope;
-        }
-
         public Equation Evaluate(Scope scope)
         {
             Equation clone = Clone();
@@ -94,6 +81,12 @@ namespace Talysoft.Mathematics
             clone.right = clone.right.Expand();
 
             return clone;
+        }
+
+        public void FillScope(Scope scope)
+        {
+            left.FillScope(scope);
+            right.FillScope(scope);
         }
 
         public override string ToString()

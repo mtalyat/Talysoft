@@ -41,5 +41,7 @@ namespace Talysoft.Mathematics
         {
             return Clone();
         }
+
+        public override void FillScope(Scope scope) {}
     }
 }

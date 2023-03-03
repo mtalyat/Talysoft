@@ -192,6 +192,11 @@ namespace Talysoft.Mathematics
 
         #endregion
 
+        public override void FillScope(Scope scope)
+        {
+            scope.Add(this);
+        }
+
         public override Token Clone()
         {
             return new Variable(Symbol, Sub, IsNegative);

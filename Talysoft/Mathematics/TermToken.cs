@@ -157,6 +157,12 @@ namespace Talysoft.Mathematics
                 }
             }
 
+            public override void FillScope(Scope scope)
+            {
+                Token.FillScope(scope);
+                Exponent.FillScope(scope);
+            }
+
             #endregion
 
             #region Operations

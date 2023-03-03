@@ -11,6 +11,9 @@ namespace Talysoft.Mathematics
     /// The Functions class contains functions that can be called in equations, as well as code.
     /// All Function names are case insensitive.
     /// All Functions must have Token as the parameter type, and some form of Token as the return type.
+    /// 
+    /// Only public methods will be able to be used within the math. 
+    /// Public methids with the Hidden attribute will not be able to be used within the math.
     /// </summary>
     public static partial class Functions
     {

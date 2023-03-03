@@ -63,6 +63,19 @@ namespace Talysoft.Mathematics
         }
 
         /// <summary>
+        /// Adds a Variable to this Scope with the default Number value.
+        /// </summary>
+        /// <param name="variable"></param>
+        public void Add(Variable variable)
+        {
+            // only add if does not exist
+            if(!variables.ContainsKey(variable))
+            {
+                variables.Add(variable, Number.Zero);
+            }
+        }
+
+        /// <summary>
         /// Removes the Variable and its corresponding value from the Scope.
         /// </summary>
         /// <param name="variable"></param>

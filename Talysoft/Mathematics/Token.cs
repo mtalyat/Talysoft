@@ -66,6 +66,8 @@ namespace Talysoft.Mathematics
 
         public abstract Token Clone();
 
+        public abstract void FillScope(Scope scope);
+
         #region Operations
 
         /// <summary>

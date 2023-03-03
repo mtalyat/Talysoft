@@ -243,6 +243,15 @@ namespace Talysoft.Mathematics
             return terms[0].Reduce();
         }
 
+        public override void FillScope(Scope scope)
+        {
+            // get scope from each term
+            foreach(Term term in terms)
+            {
+                term.FillScope(scope);
+            }
+        }
+
         #endregion
 
         #region Operations

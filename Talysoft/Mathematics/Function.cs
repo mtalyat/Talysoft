@@ -7,6 +7,9 @@ using System.Reflection;
 
 namespace Talysoft.Mathematics
 {
+    /// <summary>
+    /// A function is a specific operation that can be conducted on a token.
+    /// </summary>
     public class Function : Element
     {
         //only constant if all arguments are constant
@@ -123,6 +126,14 @@ namespace Talysoft.Mathematics
             {
                 //otherwise, it cannot be made into a number
                 return Number.NaN;
+            }
+        }
+
+        public override void FillScope(Scope scope)
+        {
+            foreach(Token arg in arguments)
+            {
+                arg.FillScope(scope);
             }
         }
 

@@ -629,6 +629,19 @@ namespace Talysoft.Mathematics
             }
         }
 
+        public override void FillScope(Scope scope)
+        {
+            foreach(TermToken token in numerators)
+            {
+                token.FillScope(scope);
+            }
+
+            foreach(TermToken token in denominators)
+            {
+                token.FillScope(scope);
+            }
+        }
+
         #endregion
 
         #region Operations
