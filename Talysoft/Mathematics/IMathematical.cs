@@ -9,13 +9,6 @@ namespace Talysoft.Mathematics
     public interface IMathematical<T>
     {
         /// <summary>
-        /// Adds all of the Variables within this <typeparamref name="T"/> to the given Scope. Does not check for null.
-        /// </summary>
-        /// <param name="scope"></param>
-        /// <returns>A Scope with all of the variables within this <typeparamref name="T"/>.</returns>
-        void FillScope(Scope scope);
-
-        /// <summary>
         /// Evaluates the <typeparamref name="T"/> to the best ability it can, given the scope, and returns it.
         /// Evaluate will not necessarily retain the same object type.
         /// </summary>
@@ -43,6 +36,13 @@ namespace Talysoft.Mathematics
         /// </summary>
         /// <returns></returns>
         T Expand();
+
+        /// <summary>
+        /// Adds all of the Variables within this <typeparamref name="T"/> to the given Scope. Does not check for null.
+        /// </summary>
+        /// <param name="scope"></param>
+        /// <returns>A Scope with all of the variables within this <typeparamref name="T"/>.</returns>
+        void FillScope(Scope scope);
 
         /// <summary>
         /// Returns a clone of this <typeparamref name="T"/>.

@@ -105,18 +105,29 @@ namespace Talysoft.Mathematics
         public override Token Evaluate(Scope scope)
         {
             //just return the corresponding value from the scope
-            Operand operand = scope.Get(this);
+            Token token = scope.Get(this);
 
-            //apply negative
-            operand.SetNegative(IsNegative);
+            // if no value, return self
+            if(token == null)
+            {
+                return Clone();
+            }
 
-            return operand;
-        }
+            // value given, so we want to return that
 
-        public override Token Simplify()
-        {
-            //variables cannot be simplified
-            return Clone();
+            // apply negative
+            if(token is Operand operand)
+            {
+                // if an operand, set directly
+                operand.SetNegative(isNegative);
+            }
+            else
+            {
+                // if not operand, put into a term
+                token = new Term(IsNegative ? Number.NegativeOne : Number.One, token).Reduce();
+            }
+
+            return token;
         }
 
         #endregion

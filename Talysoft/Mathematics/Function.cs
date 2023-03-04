@@ -54,8 +54,15 @@ namespace Talysoft.Mathematics
 
         public override Token Expand()
         {
-            //cannot be expanded
-            return Clone();
+            //expand arguments
+            Function clone = (Function)Clone();
+
+            for (int i = 0; i < clone.arguments.Count; i++)
+            {
+                clone.arguments[i] = clone.arguments[i].Expand();
+            }
+
+            return clone;
         }
 
         #endregion

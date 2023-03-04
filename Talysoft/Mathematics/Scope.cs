@@ -25,14 +25,14 @@ namespace Talysoft.Mathematics
         /// <summary>
         /// A dictionary to store the variables and their corresponding values.
         /// </summary>
-        private Dictionary<Variable, Number> variables;
+        private Dictionary<Variable, Token> variables;
 
         /// <summary>
         /// Creates a new Scope with no values.
         /// </summary>
         public Scope()
         {
-            variables = new Dictionary<Variable, Number>();
+            variables = new Dictionary<Variable, Token>();
         }
 
         /// <summary>
@@ -40,16 +40,16 @@ namespace Talysoft.Mathematics
         /// </summary>
         /// <param name="variable"></param>
         /// <returns>The number with the value of the variable, or a clone of the variable if no value exists.</returns>
-        public Operand Get(Variable variable)
+        public Token Get(Variable variable)
         {
-            Number value;
+            Token value;
 
-            if (variables.TryGetValue(variable, out value))
+            if (variables.TryGetValue(variable, out value) && value != null)
             {
-                return value;
+                return value.Clone();
             }
 
-            return (Variable)variable.Clone();
+            return null;
         }
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace Talysoft.Mathematics
         /// </summary>
         /// <param name="variable"></param>
         /// <param name="value"></param>
-        public void Set(Variable variable, Number value)
+        public void Set(Variable variable, Token value)
         {
             variables[variable] = value;
         }
@@ -71,7 +71,7 @@ namespace Talysoft.Mathematics
             // only add if does not exist
             if(!variables.ContainsKey(variable))
             {
-                variables.Add(variable, Number.Zero);
+                variables.Add(variable, null);
             }
         }
 
@@ -95,7 +95,7 @@ namespace Talysoft.Mathematics
 
         public override string ToString()
         {
-            return string.Join("; ", variables.Select(p => $"{p.Key} = {p.Value}").ToArray());
+            return string.Join("; ", variables.Select(p => $"{p.Key} = {(p.Value == null ? "?" : p.Value.ToString())}").ToArray());
         }
     }
 }

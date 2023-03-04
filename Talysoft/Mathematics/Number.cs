@@ -151,12 +151,6 @@ namespace Talysoft.Mathematics
 
         #region Solving
 
-        public override Token Simplify()
-        {
-            //the Number is already as simplified as it can get, so just return a copy
-            return Clone();
-        }
-
         public override Token Evaluate(Scope scope)
         {
             //the Number is already as simplified and as evaluated as it can get, so just return a copy

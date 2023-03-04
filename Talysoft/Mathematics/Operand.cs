@@ -42,6 +42,13 @@ namespace Talysoft.Mathematics
             return Clone();
         }
 
+        // operands cannot be simplified
+        public override Token Simplify()
+        {
+            //the Number is already as simplified as it can get, so just return a copy
+            return Clone();
+        }
+
         public override void FillScope(Scope scope) {}
     }
 }
