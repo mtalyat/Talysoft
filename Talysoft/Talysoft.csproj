@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="Constants.cs" />
     <Compile Include="DataTypes\PackedInt.cs" />
+    <Compile Include="DataTypes\Pair.cs" />
     <Compile Include="Debugging\Logger.cs" />
     <Compile Include="Generator.cs" />
     <Compile Include="IO\Compression.cs" />

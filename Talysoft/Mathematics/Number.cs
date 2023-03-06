@@ -89,6 +89,11 @@ namespace Talysoft.Mathematics
         /// </summary>
         public bool IsWholeNumber => Math.Round(Value) == Value;
 
+        /// <summary>
+        /// Is true when the Value corresponding to this number is Not a Number (NaN).
+        /// </summary>
+        public bool IsNaN => double.IsNaN(Value);
+
         public override bool IsConstant => true;
         
         /// <summary>
@@ -163,7 +168,7 @@ namespace Talysoft.Mathematics
 
         public override bool Equals(object obj)
         {
-            return obj is Number n && n.Value == Value;
+            return obj is Number other && other.Value == Value;
         }
 
         public override int GetHashCode()

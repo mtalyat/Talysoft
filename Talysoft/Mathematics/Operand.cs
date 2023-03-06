@@ -50,5 +50,11 @@ namespace Talysoft.Mathematics
         }
 
         public override void FillScope(Scope scope) {}
+
+        internal override Number ExtractNumbers()
+        {
+            // cannot extract numbers
+            return Number.NaN;
+        }
     }
 }

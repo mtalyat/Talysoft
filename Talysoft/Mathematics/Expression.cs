@@ -185,54 +185,64 @@ namespace Talysoft.Mathematics
             //if there are no terms, it is zero
             if (!terms.Any()) return Number.Zero;
 
-            //otherwise, just add all the terms together
-            Token output = terms[0].Evaluate(scope);
+            // create new list of terms, evaluated
+            List<Term> evaluated = new List<Term>(terms.Count);
 
-            for (int i = 1; i < terms.Count; i++)
+            // evaluate terms
+            foreach(Term term in terms)
             {
-                output = output.Add(terms[i].Evaluate(scope));
+                evaluated.Add((Term)term.Evaluate(scope));
             }
 
-            return output;
+            // add to expression and return
+            return new Expression(evaluated.ToArray()).Simplify();
         }
 
         public override Token Simplify()
         {
-            //go through each element, similar to a term
-            //combine like terms
+            // go through each term, check if it can be combined
+            List<Term> simplified = terms.Select(t => (Term)t.Simplify()).ToList();
             List<Term> ts = new List<Term>(terms.Count);
 
-            foreach(Term t in terms)
+            for (int i = simplified.Count - 1; i >= 0; i--)
             {
-                Term simplified = (Term)t.Simplify();
-
-                //if a term is 0, forget about it
-                if (simplified.IsZero) continue;
-
-                bool found = false;
-
-                for (int i = 0; i < ts.Count; i++)
+                if(i >= simplified.Count)
                 {
-                    Term tsT = ts[i];
+                    // move on if above count
+                    continue;
+                }
 
-                    if(tsT.IsLikeTerm(simplified))
+                Term term = simplified[i];
+
+                // remove self from list
+                simplified.RemoveAt(i);
+
+                // if term is zero, it an be omitted
+                if (term.IsZero) continue;
+
+                // check against other terms to add together
+                for (int j = simplified.Count - 1; j >= 0; j--)
+                {
+                    // get other term
+                    Term other = simplified[j];
+
+                    // if like term, add to this term, remove from simplified
+                    if(term.IsLikeTerm(other))
                     {
-                        ts[i] = (Term)tsT.Add(simplified);
-                        found = true;
-                        break;
+                        // add to term
+                        term = (Term)term.Add(other);
+
+                        // remove from simplified so it is not added to anther term
+                        simplified.RemoveAt(j);
                     }
                 }
 
-                if(!found)
-                {
-                    ts.Add(simplified);
-                }
+                // add combined term to the title
+                ts.Add(term);
             }
 
-            //return a new expression with the simplified terms
             Expression output = new Expression(ts.ToArray());
 
-            output.SortTerms();
             return output;
         }
 
@@ -250,6 +260,12 @@ namespace Talysoft.Mathematics
             {
                 term.FillScope(scope);
             }
+        }
+
+        internal override Number ExtractNumbers()
+        {
+            // cannot extract for now
+            return Number.NaN;
         }
 
         #endregion
@@ -319,6 +335,16 @@ namespace Talysoft.Mathematics
             terms.ForEach(t => output *= t.ToNumber());
 
             return output;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is Expression other && terms.SequenceEqual(other.terms);
+        }
+
+        public override int GetHashCode()
+        {
+            return terms.GetHashCode();
         }
 
         #endregion

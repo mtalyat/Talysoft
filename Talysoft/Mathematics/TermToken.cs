@@ -91,8 +91,8 @@ namespace Talysoft.Mathematics
 
                 //simplify the values
                 TermToken clone = (TermToken)Clone();
-                clone.Token = clone.Token.Simplify();
-                clone.Exponent = clone.Exponent.Simplify();
+                clone.Token = clone.Token.Reduce().Simplify();
+                clone.Exponent = clone.Exponent.Reduce().Simplify();
 
                 if (clone.Token.IsNumber && clone.Exponent.IsConstant)
                 {
@@ -161,6 +161,27 @@ namespace Talysoft.Mathematics
             {
                 Token.FillScope(scope);
                 Exponent.FillScope(scope);
+            }
+
+            internal override Number ExtractNumbers()
+            {
+                // if exponent is not constant, cannot extract
+                if(!Exponent.IsConstant)
+                {
+                    return Number.NaN;
+                }
+
+                // extract and multiply by exponent
+                Number number = Token.ExtractNumbers();
+
+                // if no number, return nothing
+                if(number.IsNaN)
+                {
+                    return Number.NaN;
+                }
+
+                // has a number, and an exponent
+                return new Number(Math.Pow(number, Exponent.ToNumber()));
             }
 
             #endregion

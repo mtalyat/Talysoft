@@ -501,43 +501,51 @@ namespace Talysoft.Mathematics
 
             if (coefficientDenominator == 0) return Number.NaN;
 
-            //evaluate all items in the numerator and denominator
-            //we already know the coefficients are evaluated
-            Term clone = (Term)Clone();
+            // get coefficients
+            Number cNum = (Number)coefficientNumerator.Clone();
+            Number cDenom = (Number)coefficientDenominator.Clone();
 
-            List<Token> num = new List<Token>(numerators.Count);
-            List<Token> den = new List<Token>(denominators.Count);
+            // get values
+            List<Token> num = new List<Token>();
+            List<Token> denom = new List<Token>();
 
-            //evaluate the numerator and denominator
-            numerators.ForEach(e => num.Add(e.Evaluate(scope)));
-            denominators.ForEach(e => den.Add(e.Evaluate(scope)));
+            Number n;
 
-            //multiply all numerators and denominators together
-            Token numOut = coefficientNumerator.Clone();
-            Token denOut = coefficientDenominator.Clone();
-
-            num.ForEach(t => numOut = numOut.Multiply(t));
-            den.ForEach(t => denOut = denOut.Multiply(t));
-
-            //if the num and den outputs are able to evaluate to a whole number, evaluate that
-            //otherwise, keep it as a fraction
-
-            //if either num or den are not constant, it cannot be simplified any further
-            if (!numOut.IsConstant || !denOut.IsConstant) return CreateFraction(numOut, denOut);
-
-            //if constant, try to reduce if possible
-            Term fraction = (Term)CreateFraction(numOut, denOut);
-
-            //if the denominator is one, just return the numerator
-            if (fraction.IsDenominatorOne)
+            // evaluate each value, add to coefficient if constant
+            foreach(TermToken t in numerators)
             {
-                numOut = fraction.coefficientNumerator;
-                fraction.numerators.ForEach(e => numOut = numOut.Multiply(e));
-                return numOut;
-            } else
-            {
-                return fraction;
+                // eval
+                Token token = t.Evaluate(scope);
+
+                // extract numbers
+                n = t.ExtractNumbers();
+
+                if(!n.IsNaN)
+                {
+                    cNum = (Number)cNum.Multiply(n);
+                }
+
+                num.Add(token);
             }
+
+            foreach (TermToken t in denominators)
+            {
+                // eval
+                Token token = t.Evaluate(scope);
+
+                // extract numbers
+                n = t.ExtractNumbers();
+
+                if (!n.IsNaN)
+                {
+                    cDenom = (Number)cDenom.Multiply(n);
+                }
+
+                denom.Add(token);
+            }
+
+            // return simplified version
+            return new Term(cNum, cDenom, num.ToArray(), denom.ToArray());
         }
 
         public override Token Simplify()
@@ -548,7 +556,31 @@ namespace Talysoft.Mathematics
 
             Term clone = (Term)Clone();
 
-            //TODO: find any constants, add to numerator/denominator
+            Number temp;
+
+            foreach(TermToken t in numerators)
+            {
+                temp = t.ExtractNumbers();
+
+                if(temp.IsNaN)
+                {
+                    continue;
+                }
+
+                clone.coefficientNumerator = (Number)clone.coefficientNumerator.Multiply(temp);
+            }
+
+            foreach (TermToken t in denominators)
+            {
+                temp = t.ExtractNumbers();
+
+                if (temp.IsNaN)
+                {
+                    continue;
+                }
+
+                clone.coefficientDenominator = (Number)clone.coefficientDenominator.Multiply(temp);
+            }
 
             //first, make sure they are both whole numbers
             int places = Math.Max(Functions.DecimalPlaces(clone.coefficientNumerator).Integer, Functions.DecimalPlaces(clone.coefficientDenominator).Integer);
@@ -642,6 +674,52 @@ namespace Talysoft.Mathematics
             }
         }
 
+        internal override Number ExtractNumbers()
+        {
+            // use coefficients
+            // divide numerator by denominator at end
+            Number num = coefficientNumerator;
+            Number denom = coefficientDenominator;
+
+            coefficientNumerator = Number.One;
+            coefficientDenominator = Number.One;
+
+            Number n;
+
+            foreach(Token token in numerators)
+            {
+                n = token.ExtractNumbers();
+                
+                //ignore invalid
+                if(n.IsNaN)
+                {
+                    continue;
+                }
+
+                num = (Number)num.Multiply(n);
+            }
+
+            foreach (Token token in denominators)
+            {
+                n = token.ExtractNumbers();
+
+                //ignore invalid
+                if (n.IsNaN)
+                {
+                    continue;
+                }
+
+                denom = (Number)denom.Multiply(n);
+            }
+
+            if(num.IsZero || denom.IsZero)
+            {
+                return Number.Zero;
+            }
+
+            return num / denom;
+        }
+
         #endregion
 
         #region Operations
@@ -662,7 +740,6 @@ namespace Talysoft.Mathematics
                 clone = clone.EnsureCommonDenominator(t);
 
                 Element newNumerator;
-
                 
                 if(clone.IsLikeTerm(cdT))
                 {
@@ -745,6 +822,20 @@ namespace Talysoft.Mathematics
             denominators.ForEach(e => denominator *= e.ToNumber());
 
             return numerator / denominator;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is Term other &&
+                coefficientNumerator == other.coefficientNumerator &&
+                coefficientDenominator == other.coefficientDenominator &&
+                numerators.SequenceEqual(other.numerators) &&
+                denominators.SequenceEqual(other.denominators);
+        }
+
+        public override int GetHashCode()
+        {
+            return coefficientNumerator.GetHashCode() << 3 ^ coefficientDenominator.GetHashCode() << 2 ^ numerators.GetHashCode() << 1 ^ denominators.GetHashCode();
         }
 
         #endregion

@@ -73,6 +73,16 @@ namespace Talysoft.Mathematics
             return new Number(Value);
         }
 
+        public override bool Equals(object obj)
+        {
+            return obj is Constant other && Name.Equals(other.Name) && Symbol.Equals(other.Symbol);
+        }
+
+        public override int GetHashCode()
+        {
+            return Name.GetHashCode() ^ Symbol.GetHashCode();
+        }
+
         #endregion
 
         #region Parsing

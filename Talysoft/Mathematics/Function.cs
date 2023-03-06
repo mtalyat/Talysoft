@@ -144,6 +144,12 @@ namespace Talysoft.Mathematics
             }
         }
 
+        internal override Number ExtractNumbers()
+        {
+            // cannot remove numbers from arguments
+            return Number.NaN;
+        }
+
         #endregion
 
         #region Operations
@@ -175,6 +181,16 @@ namespace Talysoft.Mathematics
                 //must multiply into a term if anything else
                 return new Term(new Element[] { (Element)Clone(), (Element)token });
             }
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is Function other && Name.Equals(other.Name) && arguments.SequenceEqual(other.arguments);
+        }
+
+        public override int GetHashCode()
+        {
+            return Name.GetHashCode() ^ arguments.GetHashCode();
         }
 
         #endregion

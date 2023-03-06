@@ -101,6 +101,16 @@ namespace Talysoft.Mathematics
             return new Equation(left.Clone(), right.Clone());
         }
 
+        public override bool Equals(object obj)
+        {
+            return obj is Equation other && left.Equals(other.left) && right.Equals(other.right);
+        }
+
+        public override int GetHashCode()
+        {
+            return left.GetHashCode() ^ right.GetHashCode();
+        }
+
         #region Parsing
 
         /// <summary>
